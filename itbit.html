@@ -820,7 +820,8 @@ async function initAuth(){
     else if(event === 'SIGNED_OUT'){ currentUser = null; records = []; ready = false; showGate(); }
   });
 }
-
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+   const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 setupPWA();
 initAuth();
 </script>
