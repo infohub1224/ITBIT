@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ITBIT — Shop Manager</title>
+<meta name="theme-color" content="#141F24">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ITBIT">
+<link rel="manifest" id="manifest-link">
+<link rel="apple-touch-icon" id="apple-icon-link">
+<link rel="icon" id="favicon-link">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --bg:#141F24;
+    --bg-deep:#0D1518;
+    --card:#1C2C31;
+    --card-2:#22353B;
+    --line:#31474E;
+    --ink:#EFF3F2;
+    --ink-dim:#8FA5AA;
+    --blue:#6FB1E0;
+    --blue-dim:#26414D;
+    --gold:#D9B26A;
+    --income:#7FCB9A;
+    --income-dim:#3E5A48;
+    --expense:#E8795F;
+    --expense-dim:#5A3E38;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:
+      repeating-linear-gradient(180deg, transparent 0 39px, rgba(255,255,255,0.02) 39px 40px),
+      radial-gradient(circle at 20% 0%, #1B2A30 0%, var(--bg) 55%);
+    color:var(--ink);
+    min-height:100vh;
+    padding-bottom:40px;
+  }
+  .app{max-width:460px;margin:0 auto;padding:20px 16px 10px;}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .brand{display:flex;flex-direction:column;}
+  .brand .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:600;}
+  .brand h1{font-family:'Fraunces',serif;font-size:24px;margin:2px 0 0;font-weight:600;letter-spacing:-.01em;}
+  .header-actions{display:flex;gap:6px;align-items:center;}
+  .icon-btn{background:var(--card);border:1px solid var(--line);color:var(--ink-dim);width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;}
+  .icon-btn:hover{color:var(--blue);border-color:var(--blue);}
+
+  /* Dashboard cards */
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+  .stat-card{background:linear-gradient(160deg,var(--card-2),var(--card));border:1px solid var(--line);border-radius:14px;padding:14px;}
+  .stat-card .k{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-dim);}
+  .stat-card .v{font-family:'Fraunces',serif;font-size:20px;font-weight:600;margin-top:4px;}
+  .stat-card.wide{grid-column:1 / -1;}
+  .stat-card .v.blue{color:var(--blue);}
+  .stat-card .v.gold{color:var(--gold);}
+  .stat-card .v.in{color:var(--income);}
+  .stat-card .v.out{color:var(--expense);}
+
+  /* Tabs */
+  .tabs{display:flex;gap:5px;margin:14px 0 12px;background:var(--card);border:1px solid var(--line);padding:4px;border-radius:100px;overflow-x:auto;}
+  .tab{flex:1;text-align:center;padding:9px 4px;font-size:11.5px;font-weight:600;color:var(--ink-dim);border-radius:100px;cursor:pointer;user-select:none;white-space:nowrap;}
+  .tab.active{background:var(--bg-deep);color:var(--blue);}
+
+  .section-title{font-family:'Fraunces',serif;font-size:15px;color:var(--ink-dim);margin:18px 2px 8px;display:flex;justify-content:space-between;align-items:baseline;}
+  .section-title span.count{font-size:11px;font-family:'Inter';color:var(--ink-dim);}
+
+  .fab-add{width:100%;padding:12px;border-radius:12px;border:1px dashed var(--line);background:transparent;color:var(--ink-dim);font-weight:600;font-size:13px;cursor:pointer;margin-bottom:14px;}
+  .fab-add:hover{border-color:var(--blue);color:var(--blue);}
+
+  .add-form{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:14px;display:none;}
+  .add-form.open{display:block;}
+  .add-form .row{display:flex;gap:8px;margin-bottom:8px;}
+  .add-form input, .add-form select{flex:1;background:var(--bg-deep);border:1px solid var(--line);border-radius:10px;padding:11px 12px;color:var(--ink);font-size:14px;font-family:'Inter';outline:none;}
+  .add-form input:focus, .add-form select:focus{border-color:var(--blue);}
+  .add-form input::placeholder{color:#5E7278;}
+  .add-form .actions{display:flex;gap:8px;}
+  .btn{border:none;border-radius:10px;padding:11px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter';}
+  .btn-primary{background:var(--blue);color:#0D1518;flex:1;}
+  .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink-dim);}
+  .btn-gold{background:var(--gold);color:#1B2A2F;flex:1;}
+
+  /* Generic entry card */
+  .entry{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:9px;}
+  .entry .left{display:flex;align-items:center;gap:12px;min-width:0;}
+  .entry .name{font-size:14px;font-weight:600;}
+  .entry .meta{font-size:11px;color:var(--ink-dim);margin-top:2px;}
+  .entry .right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+  .entry .amt{font-family:'Fraunces',serif;font-size:15px;font-weight:600;}
+  .del{background:none;border:none;color:#5E7278;font-size:16px;cursor:pointer;padding:2px 6px;line-height:1;}
+  .del:hover{color:var(--expense);}
+  .badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:100px;margin-left:6px;vertical-align:middle;}
+  .badge-paid{background:var(--income-dim);color:var(--income);}
+  .badge-partial{background:var(--blue-dim);color:var(--blue);}
+  .badge-unpaid{background:var(--expense-dim);color:var(--expense);}
+
+  .qty-pill{font-size:11px;padding:3px 9px;border-radius:100px;background:var(--blue-dim);color:var(--blue);font-weight:700;}
+  .qty-pill.low{background:var(--expense-dim);color:var(--expense);}
+
+  /* Invoice builder */
+  .item-row{display:flex;gap:6px;margin-bottom:8px;align-items:center;}
+  .item-row select{flex:2;}
+  .item-row input{flex:1;min-width:0;}
+  .item-row .rm{background:none;border:none;color:var(--expense);font-size:16px;cursor:pointer;padding:4px 6px;}
+  .add-item-btn{width:100%;padding:9px;border-radius:9px;border:1px dashed var(--line);background:transparent;color:var(--ink-dim);font-size:12px;font-weight:600;cursor:pointer;margin-bottom:10px;}
+  .invoice-total{display:flex;justify-content:space-between;align-items:center;background:var(--bg-deep);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+  .invoice-total .lbl{font-size:12px;color:var(--ink-dim);}
+  .invoice-total .val{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--blue);}
+
+  .party-detail{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;}
+  .party-detail .close-x{float:right;cursor:pointer;color:var(--ink-dim);font-size:16px;}
+  .empty{text-align:center;padding:30px 10px;color:var(--ink-dim);font-size:13px;border:1px dashed var(--line);border-radius:14px;}
+  .empty .big{font-family:'Fraunces',serif;font-size:16px;color:var(--ink);display:block;margin-bottom:4px;}
+  .loading{text-align:center;padding:40px;color:var(--ink-dim);font-size:13px;}
+
+  /* Login gate */
+  .gate{position:fixed;inset:0;background:
+      repeating-linear-gradient(180deg, transparent 0 39px, rgba(255,255,255,0.02) 39px 40px),
+      radial-gradient(circle at 20% 0%, #1B2A30 0%, var(--bg) 55%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;z-index:1000;text-align:center;}
+  .gate .gate-eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:600;}
+  .gate h1{font-family:'Fraunces',serif;font-size:34px;margin:8px 0 6px;font-weight:600;}
+  .gate p{color:var(--ink-dim);font-size:13px;max-width:280px;margin:0 0 26px;line-height:1.5;}
+  .gate-actions{display:flex;flex-direction:column;gap:10px;width:100%;max-width:260px;}
+  .gate-actions .btn{padding:13px;font-size:14px;}
+  .gate-input{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--ink);font-size:14px;font-family:'Inter';outline:none;width:100%;}
+  .gate-input:focus{border-color:var(--blue);}
+  .gate-input::placeholder{color:#5E7278;}
+  .gate-error{font-size:12px;color:var(--expense);min-height:16px;text-align:left;}
+  .gate-link{font-size:12px;color:var(--blue);text-align:center;cursor:pointer;margin-top:4px;text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="gate" id="gate" style="display:none">
+  <div class="gate-eyebrow">Shop Management</div>
+  <h1>ITBIT</h1>
+  <p>Apni shop ka sell/purchase, stock aur udhaar ka pura hisab — kisi bhi device se access karein.</p>
+  <div class="gate-actions" id="gate-auth-view">
+    <input id="gate-email" class="gate-input" type="email" placeholder="Email" autocomplete="email">
+    <input id="gate-pass" class="gate-input" type="password" placeholder="Password" autocomplete="current-password">
+    <div id="gate-error" class="gate-error"></div>
+    <button class="btn btn-primary" onclick="doLogin()">Login karein</button>
+    <button class="btn btn-ghost" onclick="doSignup()">Naya Account banayein</button>
+    <div class="gate-link" onclick="showForgotView()">Password bhool gaye?</div>
+  </div>
+  <div class="gate-actions" id="gate-forgot-view" style="display:none">
+    <p style="margin:0 0 4px;font-size:12px;color:var(--ink-dim);">Apna email likhein, hum reset link bhej dete hain.</p>
+    <input id="forgot-email" class="gate-input" type="email" placeholder="Email" autocomplete="email">
+    <div id="forgot-error" class="gate-error"></div>
+    <button class="btn btn-primary" onclick="doForgotPassword()">Reset link bhejein</button>
+    <div class="gate-link" onclick="showAuthView()">Wapas Login par jayein</div>
+  </div>
+  <div class="gate-actions" id="gate-recovery-view" style="display:none">
+    <p style="margin:0 0 4px;font-size:12px;color:var(--ink-dim);">Apna naya password likhein.</p>
+    <input id="new-pass" class="gate-input" type="password" placeholder="Naya password" autocomplete="new-password">
+    <div id="recovery-error" class="gate-error"></div>
+    <button class="btn btn-primary" onclick="doSetNewPassword()">Password set karein</button>
+  </div>
+</div>
+
+<div class="app" id="app" style="display:none">
+  <div class="loading" id="loadingMsg">Load ho raha hai...</div>
+</div>
+
+<script>
+/* ================= CONFIG ================= */
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+/* ============================================ */
+
+const { createClient } = supabase;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let currentUser = null;
+let records = []; // {id, type: 'product'|'customer'|'supplier'|'sale'|'purchase'|'payment', payload}
+let ready = false;
+let activeTab = 'dashboard'; // dashboard | inventory | sales | purchase | parties
+let formOpen = { product:false, customer:false, supplier:false, sale:false, purchase:false };
+let saleItems = [];    // working invoice items for new sale
+let purchaseItems = []; // working invoice items for new purchase
+let openPartyId = null; // party detail panel toggle
+
+const app = document.getElementById('app');
+
+function fmt(n){ return new Intl.NumberFormat('en-PK').format(Math.round(n||0)); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+/* ============== DATA (Supabase) ============== */
+async function loadData(){
+  if(!currentUser) return;
+  try{
+    const { data, error } = await supabaseClient.from('records').select('*').eq('user_id', currentUser.id);
+    if(error) throw error;
+    records = (data||[]).map(r => ({ id:r.id, type:r.type, payload:r.payload }));
+  }catch(e){
+    console.error(e);
+    records = [];
+    alert('Data load nahi ho saka. Internet check karein.');
+  }
+  ready = true;
+  render();
+}
+
+async function saveAll(){
+  if(!currentUser) return;
+  try{
+    await supabaseClient.from('records').delete().eq('user_id', currentUser.id);
+    if(records.length){
+      const rows = records.map(r => ({ id:r.id, user_id: currentUser.id, type:r.type, payload:r.payload }));
+      const { error } = await supabaseClient.from('records').insert(rows);
+      if(error) throw error;
+    }
+  }catch(e){
+    console.error(e);
+    alert('Save nahi ho saka. Internet check karein.');
+  }
+}
+
+function addRecord(type, payload){
+  records.push({ id: uid(), type, payload });
+  saveAll();
+}
+function updateRecord(id, newPayload){
+  const r = records.find(x=>x.id===id);
+  if(r){ r.payload = newPayload; saveAll(); }
+}
+function deleteRecord(id){
+  records = records.filter(r=>r.id!==id);
+  saveAll();
+  render();
+}
+
+/* ============== GETTERS ============== */
+function products(){ return records.filter(r=>r.type==='product'); }
+function customers(){ return records.filter(r=>r.type==='customer'); }
+function suppliers(){ return records.filter(r=>r.type==='supplier'); }
+function sales(){ return records.filter(r=>r.type==='sale'); }
+function purchases(){ return records.filter(r=>r.type==='purchase'); }
+function payments(){ return records.filter(r=>r.type==='payment'); }
+
+function productById(id){ return products().find(p=>p.id===id); }
+function partyName(type, id){
+  if(!id) return 'Walk-in';
+  const list = type==='customer' ? customers() : suppliers();
+  const p = list.find(x=>x.id===id);
+  return p ? p.payload.name : 'Unknown';
+}
+
+function customerBalance(id){
+  const s = sales().filter(x=>x.payload.customerId===id);
+  const totalSale = s.reduce((sum,x)=>sum + x.payload.total, 0);
+  const totalPaidAtSale = s.reduce((sum,x)=>sum + (x.payload.paid||0), 0);
+  const extraPay = payments().filter(x=>x.payload.partyType==='customer' && x.payload.partyId===id)
+    .reduce((sum,x)=>sum + x.payload.amount, 0);
+  return totalSale - totalPaidAtSale - extraPay; // positive = customer owes shop
+}
+function supplierBalance(id){
+  const p = purchases().filter(x=>x.payload.supplierId===id);
+  const totalPurchase = p.reduce((sum,x)=>sum + x.payload.total, 0);
+  const totalPaidAtPurchase = p.reduce((sum,x)=>sum + (x.payload.paid||0), 0);
+  const extraPay = payments().filter(x=>x.payload.partyType==='supplier' && x.payload.partyId===id)
+    .reduce((sum,x)=>sum + x.payload.amount, 0);
+  return totalPurchase - totalPaidAtPurchase - extraPay; // positive = shop owes supplier
+}
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+function dashboardStats(){
+  const today = todayStr();
+  const todaySales = sales().filter(s=>s.payload.date===today).reduce((sum,s)=>sum+s.payload.total,0);
+  const todayPurchases = purchases().filter(p=>p.payload.date===today).reduce((sum,p)=>sum+p.payload.total,0);
+  const inventoryValue = products().reduce((sum,p)=>sum + (p.payload.qty * p.payload.purchasePrice), 0);
+  const totalReceivable = customers().reduce((sum,c)=>sum + Math.max(0,customerBalance(c.id)), 0);
+  const totalPayable = suppliers().reduce((sum,s)=>sum + Math.max(0,supplierBalance(s.id)), 0);
+  let profit = 0;
+  sales().forEach(s=>{
+    (s.payload.items||[]).forEach(it=>{
+      profit += (it.price - (it.cost||0)) * it.qty;
+    });
+  });
+  const lowStockCount = products().filter(p=>p.payload.qty <= 2).length;
+  return { todaySales, todayPurchases, inventoryValue, totalReceivable, totalPayable, profit, lowStockCount };
+}
+
+/* ============== ACTIONS: Inventory ============== */
+function toggleForm(key){ formOpen[key] = !formOpen[key]; render(); }
+
+function submitProduct(){
+  const name = document.getElementById('p-name').value.trim();
+  const brand = document.getElementById('p-brand').value.trim();
+  const pp = parseFloat(document.getElementById('p-purchase').value);
+  const sp = parseFloat(document.getElementById('p-sale').value);
+  const qty = parseInt(document.getElementById('p-qty').value);
+  if(!name || isNaN(pp) || isNaN(sp) || isNaN(qty)){ alert('Sab fields sahi bharein'); return; }
+  addRecord('product', { name, brand, purchasePrice:pp, salePrice:sp, qty });
+  formOpen.product = false;
+  render();
+}
+
+function adjustStock(id, delta){
+  const p = productById(id);
+  if(!p) return;
+  const newQty = Math.max(0, p.payload.qty + delta);
+  updateRecord(id, {...p.payload, qty:newQty});
+  render();
+}
+
+/* ============== ACTIONS: Parties ============== */
+function submitParty(type){
+  const name = document.getElementById(type+'-name').value.trim();
+  const phone = document.getElementById(type+'-phone').value.trim();
+  if(!name){ alert('Naam likhein'); return; }
+  addRecord(type, { name, phone });
+  formOpen[type] = false;
+  render();
+}
+
+function submitPayment(type, partyId){
+  const amtEl = document.getElementById('pay-amt-'+partyId);
+  const amt = parseFloat(amtEl.value);
+  if(!amt || amt<=0){ alert('Sahi amount likhein'); return; }
+  addRecord('payment', { partyType:type, partyId, amount:amt, date:todayStr() });
+  amtEl.value = '';
+  render();
+}
+
+/* ============== ACTIONS: Sale invoice ============== */
+function addSaleItemRow(){
+  saleItems.push({ productId:'', qty:1, price:0 });
+  render();
+}
+function removeSaleItemRow(idx){
+  saleItems.splice(idx,1);
+  render();
+}
+function updateSaleItem(idx, field, value){
+  saleItems[idx][field] = field==='productId' ? value : parseFloat(value)||0;
+  if(field==='productId'){
+    const p = productById(value);
+    if(p) saleItems[idx].price = p.payload.salePrice;
+  }
+  render();
+}
+function saleTotal(){
+  return saleItems.reduce((sum,it)=>sum + (it.qty*it.price), 0);
+}
+function submitSale(){
+  const customerId = document.getElementById('sale-customer').value || null;
+  const paid = parseFloat(document.getElementById('sale-paid').value) || 0;
+  const validItems = saleItems.filter(it=>it.productId && it.qty>0);
+  if(!validItems.length){ alert('Kam az kam ek item add karein'); return; }
+  for(const it of validItems){
+    const p = productById(it.productId);
+    if(!p || p.payload.qty < it.qty){ alert('Stock kam hai: ' + (p?p.payload.name:'')); return; }
+  }
+  const items = validItems.map(it=>{
+    const p = productById(it.productId);
+    return { productId: it.productId, name:p.payload.name, qty:it.qty, price:it.price, cost:p.payload.purchasePrice };
+  });
+  const total = items.reduce((sum,it)=>sum+it.qty*it.price,0);
+  addRecord('sale', { date:todayStr(), customerId, items, total, paid });
+  items.forEach(it=>{
+    const p = productById(it.productId);
+    updateRecord(it.productId, {...p.payload, qty:p.payload.qty - it.qty});
+  });
+  saleItems = [];
+  formOpen.sale = false;
+  render();
+}
+
+/* ============== ACTIONS: Purchase invoice ============== */
+function addPurchaseItemRow(){
+  purchaseItems.push({ productId:'', qty:1, price:0 });
+  render();
+}
+function removePurchaseItemRow(idx){
+  purchaseItems.splice(idx,1);
+  render();
+}
+function updatePurchaseItem(idx, field, value){
+  purchaseItems[idx][field] = field==='productId' ? value : parseFloat(value)||0;
+  if(field==='productId'){
+    const p = productById(value);
+    if(p) purchaseItems[idx].price = p.payload.purchasePrice;
+  }
+  render();
+}
+function submitPurchase(){
+  const supplierId = document.getElementById('purchase-supplier').value || null;
+  const paid = parseFloat(document.getElementById('purchase-paid').value) || 0;
+  const validItems = purchaseItems.filter(it=>it.productId && it.qty>0);
+  if(!validItems.length){ alert('Kam az kam ek item add karein'); return; }
+  const items = validItems.map(it=>{
+    const p = productById(it.productId);
+    return { productId: it.productId, name:p.payload.name, qty:it.qty, price:it.price };
+  });
+  const total = items.reduce((sum,it)=>sum+it.qty*it.price,0);
+  addRecord('purchase', { date:todayStr(), supplierId, items, total, paid });
+  items.forEach(it=>{
+    const p = productById(it.productId);
+    updateRecord(it.productId, {...p.payload, qty:p.payload.qty + it.qty, purchasePrice: it.price});
+  });
+  purchaseItems = [];
+  formOpen.purchase = false;
+  render();
+}
+
+/* ============== BACKUP ============== */
+function exportData(){
+  try{
+    const blob = new Blob([JSON.stringify(records, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'itbit-backup-' + todayStr() + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }catch(e){ alert('Backup save nahi ho saka'); }
+}
+function triggerImport(){ document.getElementById('import-file-input').click(); }
+function importData(fileInput){
+  const file = fileInput.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const imported = JSON.parse(e.target.result);
+      if(!Array.isArray(imported)) throw new Error('Invalid');
+      const merge = confirm('OK = purane ke sath merge, Cancel = replace karein');
+      if(merge){
+        const existingIds = new Set(records.map(r=>r.id));
+        imported.forEach(item=>{ if(!existingIds.has(item.id)) records.push(item); });
+      } else {
+        records = imported;
+      }
+      saveAll(); render();
+      alert('Import ho gaya!');
+    }catch(err){ alert('Ye sahi backup file nahi hai'); }
+    fileInput.value = '';
+  };
+  reader.readAsText(file);
+}
+
+/* ============== RENDER ============== */
+function setTab(t){ activeTab = t; openPartyId = null; render(); }
+
+function productOptionsHtml(selected){
+  return '<option value="">Product chunein</option>' + products().map(p=>
+    `<option value="${p.id}" ${p.id===selected?'selected':''}>${escapeHtml(p.payload.name)} (Stock: ${p.payload.qty})</option>`
+  ).join('');
+}
+function customerOptionsHtml(selected){
+  return '<option value="">Walk-in Customer</option>' + customers().map(c=>
+    `<option value="${c.id}" ${c.id===selected?'selected':''}>${escapeHtml(c.payload.name)}</option>`
+  ).join('');
+}
+function supplierOptionsHtml(selected){
+  return '<option value="">Supplier chunein</option>' + suppliers().map(s=>
+    `<option value="${s.id}" ${s.id===selected?'selected':''}>${escapeHtml(s.payload.name)}</option>`
+  ).join('');
+}
+
+function productRow(p){
+  const low = p.payload.qty <= 2;
+  return `
+  <div class="entry">
+    <div class="left">
+      <div>
+        <div class="name">${escapeHtml(p.payload.name)}</div>
+        <div class="meta">${escapeHtml(p.payload.brand||'')} · Purchase Rs ${fmt(p.payload.purchasePrice)} · Sale Rs ${fmt(p.payload.salePrice)}</div>
+      </div>
+    </div>
+    <div class="right">
+      <span class="qty-pill ${low?'low':''}">${p.payload.qty} pcs</span>
+      <button class="del" onclick="adjustStock('${p.id}',1)" title="Stock +1">+</button>
+      <button class="del" onclick="adjustStock('${p.id}',-1)" title="Stock -1">−</button>
+      <button class="del" onclick="deleteRecord('${p.id}')" title="Delete">✕</button>
+    </div>
+  </div>`;
+}
+
+function saleRow(s){
+  const paidPct = s.payload.total>0 ? s.payload.paid/s.payload.total : 1;
+  const badge = paidPct>=1 ? '<span class="badge badge-paid">Paid</span>' : (paidPct>0 ? '<span class="badge badge-partial">Partial</span>' : '<span class="badge badge-unpaid">Unpaid</span>');
+  return `
+  <div class="entry">
+    <div class="left">
+      <div>
+        <div class="name">${partyName('customer', s.payload.customerId)} ${badge}</div>
+        <div class="meta">${s.payload.date} · ${s.payload.items.length} item(s)</div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="amt" style="color:var(--blue)">Rs ${fmt(s.payload.total)}</div>
+      <button class="del" onclick="deleteRecord('${s.id}')" title="Delete">✕</button>
+    </div>
+  </div>`;
+}
+
+function purchaseRow(p){
+  const paidPct = p.payload.total>0 ? p.payload.paid/p.payload.total : 1;
+  const badge = paidPct>=1 ? '<span class="badge badge-paid">Paid</span>' : (paidPct>0 ? '<span class="badge badge-partial">Partial</span>' : '<span class="badge badge-unpaid">Unpaid</span>');
+  return `
+  <div class="entry">
+    <div class="left">
+      <div>
+        <div class="name">${partyName('supplier', p.payload.supplierId)} ${badge}</div>
+        <div class="meta">${p.payload.date} · ${p.payload.items.length} item(s)</div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="amt" style="color:var(--gold)">Rs ${fmt(p.payload.total)}</div>
+      <button class="del" onclick="deleteRecord('${p.id}')" title="Delete">✕</button>
+    </div>
+  </div>`;
+}
+
+function partyRow(type, p){
+  const bal = type==='customer' ? customerBalance(p.id) : supplierBalance(p.id);
+  const isOpen = openPartyId === p.id;
+  let detail = '';
+  if(isOpen){
+    const txns = type==='customer'
+      ? sales().filter(s=>s.payload.customerId===p.id).map(s=>({date:s.payload.date, label:'Sale', amt:s.payload.total, paid:s.payload.paid}))
+      : purchases().filter(x=>x.payload.supplierId===p.id).map(x=>({date:x.payload.date, label:'Purchase', amt:x.payload.total, paid:x.payload.paid}));
+    const pays = payments().filter(x=>x.payload.partyType===type && x.payload.partyId===p.id);
+    detail = `
+    <div class="party-detail">
+      <span class="close-x" onclick="openPartyId=null;render()">✕</span>
+      <div class="section-title" style="margin-top:0">Transactions</div>
+      ${txns.length ? txns.map(t=>`<div class="meta" style="margin-bottom:4px;">${t.date} · ${t.label} Rs ${fmt(t.amt)} (paid Rs ${fmt(t.paid)})</div>`).join('') : '<div class="meta">Koi transaction nahi</div>'}
+      ${pays.length ? '<div class="section-title" style="margin:10px 0 4px;font-size:13px;">Extra Payments</div>' + pays.map(pm=>`<div class="meta" style="margin-bottom:4px;">${pm.payload.date} · Rs ${fmt(pm.payload.amount)}</div>`).join('') : ''}
+      <div class="row" style="display:flex;gap:8px;margin-top:10px;">
+        <input id="pay-amt-${p.id}" type="number" placeholder="Payment amount" class="gate-input" style="flex:1;">
+        <button class="btn btn-primary" style="flex:0 0 auto;padding:11px 14px;" onclick="submitPayment('${type}','${p.id}')">Payment darj karein</button>
+      </div>
+    </div>`;
+  }
+  return `
+  <div class="entry" style="cursor:pointer" onclick="openPartyId = openPartyId==='${p.id}'?null:'${p.id}'; render()">
+    <div class="left">
+      <div>
+        <div class="name">${escapeHtml(p.payload.name)}</div>
+        <div class="meta">${escapeHtml(p.payload.phone||'')}</div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="amt" style="color:${bal>0?(type==='customer'?'var(--income)':'var(--expense)'):'var(--ink-dim)'}">Rs ${fmt(Math.abs(bal))}</div>
+      <button class="del" onclick="event.stopPropagation();deleteRecord('${p.id}')" title="Delete">✕</button>
+    </div>
+  </div>
+  ${detail}`;
+}
+
+function render(){
+  if(!ready){ app.innerHTML = '<div class="loading">Load ho raha hai...</div>'; return; }
+
+  const stats = dashboardStats();
+  let body = '';
+
+  const tabsHtml = `
+  <div class="tabs">
+    <div class="tab ${activeTab==='dashboard'?'active':''}" onclick="setTab('dashboard')">Dashboard</div>
+    <div class="tab ${activeTab==='inventory'?'active':''}" onclick="setTab('inventory')">Stock</div>
+    <div class="tab ${activeTab==='sales'?'active':''}" onclick="setTab('sales')">Sales</div>
+    <div class="tab ${activeTab==='purchase'?'active':''}" onclick="setTab('purchase')">Purchase</div>
+    <div class="tab ${activeTab==='parties'?'active':''}" onclick="setTab('parties')">Parties</div>
+  </div>`;
+
+  if(activeTab==='dashboard'){
+    body = `
+    <div class="stat-grid">
+      <div class="stat-card"><div class="k">Aaj ki Sale</div><div class="v in">Rs ${fmt(stats.todaySales)}</div></div>
+      <div class="stat-card"><div class="k">Aaj ki Purchase</div><div class="v out">Rs ${fmt(stats.todayPurchases)}</div></div>
+      <div class="stat-card"><div class="k">Total Profit</div><div class="v blue">Rs ${fmt(stats.profit)}</div></div>
+      <div class="stat-card"><div class="k">Inventory Value</div><div class="v gold">Rs ${fmt(stats.inventoryValue)}</div></div>
+      <div class="stat-card"><div class="k">Customers se Lena</div><div class="v in">Rs ${fmt(stats.totalReceivable)}</div></div>
+      <div class="stat-card"><div class="k">Suppliers ko Dena</div><div class="v out">Rs ${fmt(stats.totalPayable)}</div></div>
+      ${stats.lowStockCount>0 ? `<div class="stat-card wide"><div class="k">⚠ Low Stock</div><div class="v out">${stats.lowStockCount} products kam hain (2 ya kam pcs)</div></div>` : ''}
+    </div>
+    <div class="section-title">Recent Sales</div>
+    ${sales().slice(-5).reverse().map(saleRow).join('') || '<div class="empty"><span class="big">Koi sale nahi</span>Sales tab se invoice banayein</div>'}
+    <div class="section-title">Recent Purchases</div>
+    ${purchases().slice(-5).reverse().map(purchaseRow).join('') || '<div class="empty"><span class="big">Koi purchase nahi</span>Purchase tab se invoice banayein</div>'}
+    `;
+  } else if(activeTab==='inventory'){
+    body = `
+    <button class="fab-add" onclick="toggleForm('product')">${formOpen.product?'− Form band karein':'+ Naya Product shamil karein'}</button>
+    <div class="add-form ${formOpen.product?'open':''}">
+      <div class="row"><input id="p-name" type="text" placeholder="Product ka naam (jaise Dell Inspiron 15)"></div>
+      <div class="row"><input id="p-brand" type="text" placeholder="Brand / Model (optional)"></div>
+      <div class="row">
+        <input id="p-purchase" type="number" placeholder="Purchase Price (Rs)">
+        <input id="p-sale" type="number" placeholder="Sale Price (Rs)">
+      </div>
+      <div class="row"><input id="p-qty" type="number" placeholder="Starting Stock (pcs)"></div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="submitProduct()">Save karein</button>
+        <button class="btn btn-ghost" onclick="toggleForm('product')">Cancel</button>
+      </div>
+    </div>
+    ${products().length ? products().map(productRow).join('') : `<div class="empty"><span class="big">Koi product nahi</span>Upar se apna pehla product add karein</div>`}
+    `;
+  } else if(activeTab==='sales'){
+    body = `
+    <button class="fab-add" onclick="toggleForm('sale')">${formOpen.sale?'− Form band karein':'+ Nayi Sale Invoice banayein'}</button>
+    <div class="add-form ${formOpen.sale?'open':''}">
+      <div class="row"><select id="sale-customer">${customerOptionsHtml('')}</select></div>
+      ${saleItems.map((it,idx)=>`
+        <div class="item-row">
+          <select onchange="updateSaleItem(${idx},'productId',this.value)">${productOptionsHtml(it.productId)}</select>
+          <input type="number" placeholder="Qty" value="${it.qty}" onchange="updateSaleItem(${idx},'qty',this.value)">
+          <input type="number" placeholder="Price" value="${it.price||''}" onchange="updateSaleItem(${idx},'price',this.value)">
+          <button class="rm" onclick="removeSaleItemRow(${idx})">✕</button>
+        </div>`).join('')}
+      <button class="add-item-btn" onclick="addSaleItemRow()">+ Item add karein</button>
+      <div class="invoice-total"><span class="lbl">Total</span><span class="val">Rs ${fmt(saleTotal())}</span></div>
+      <div class="row"><input id="sale-paid" type="number" placeholder="Kitna paid hua (Rs) — baqi udhaar hoga"></div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="submitSale()">Invoice Save karein</button>
+        <button class="btn btn-ghost" onclick="toggleForm('sale')">Cancel</button>
+      </div>
+    </div>
+    ${sales().length ? sales().slice().reverse().map(saleRow).join('') : `<div class="empty"><span class="big">Koi sale nahi</span>Upar se pehli invoice banayein</div>`}
+    `;
+  } else if(activeTab==='purchase'){
+    body = `
+    <button class="fab-add" onclick="toggleForm('purchase')">${formOpen.purchase?'− Form band karein':'+ Nayi Purchase Invoice banayein'}</button>
+    <div class="add-form ${formOpen.purchase?'open':''}">
+      <div class="row"><select id="purchase-supplier">${supplierOptionsHtml('')}</select></div>
+      ${purchaseItems.map((it,idx)=>`
+        <div class="item-row">
+          <select onchange="updatePurchaseItem(${idx},'productId',this.value)">${productOptionsHtml(it.productId)}</select>
+          <input type="number" placeholder="Qty" value="${it.qty}" onchange="updatePurchaseItem(${idx},'qty',this.value)">
+          <input type="number" placeholder="Cost" value="${it.price||''}" onchange="updatePurchaseItem(${idx},'price',this.value)">
+          <button class="rm" onclick="removePurchaseItemRow(${idx})">✕</button>
+        </div>`).join('')}
+      <button class="add-item-btn" onclick="addPurchaseItemRow()">+ Item add karein</button>
+      <div class="invoice-total"><span class="lbl">Total</span><span class="val" style="color:var(--gold)">Rs ${fmt(purchaseItems.reduce((s,it)=>s+it.qty*it.price,0))}</span></div>
+      <div class="row"><input id="purchase-paid" type="number" placeholder="Kitna paid hua (Rs) — baqi udhaar hoga"></div>
+      <div class="actions">
+        <button class="btn btn-gold" onclick="submitPurchase()">Invoice Save karein</button>
+        <button class="btn btn-ghost" onclick="toggleForm('purchase')">Cancel</button>
+      </div>
+    </div>
+    ${purchases().length ? purchases().slice().reverse().map(purchaseRow).join('') : `<div class="empty"><span class="big">Koi purchase nahi</span>Upar se pehli invoice banayein</div>`}
+    `;
+  } else {
+    body = `
+    <div class="section-title">Customers <span class="count">${customers().length}</span></div>
+    <button class="fab-add" onclick="toggleForm('customer')">${formOpen.customer?'− Form band karein':'+ Naya Customer shamil karein'}</button>
+    <div class="add-form ${formOpen.customer?'open':''}">
+      <div class="row"><input id="customer-name" type="text" placeholder="Customer ka naam"></div>
+      <div class="row"><input id="customer-phone" type="text" placeholder="Phone (optional)"></div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="submitParty('customer')">Save karein</button>
+        <button class="btn btn-ghost" onclick="toggleForm('customer')">Cancel</button>
+      </div>
+    </div>
+    ${customers().length ? customers().map(c=>partyRow('customer',c)).join('') : `<div class="empty"><span class="big">Koi customer nahi</span></div>`}
+
+    <div class="section-title">Suppliers <span class="count">${suppliers().length}</span></div>
+    <button class="fab-add" onclick="toggleForm('supplier')">${formOpen.supplier?'− Form band karein':'+ Naya Supplier shamil karein'}</button>
+    <div class="add-form ${formOpen.supplier?'open':''}">
+      <div class="row"><input id="supplier-name" type="text" placeholder="Supplier ka naam"></div>
+      <div class="row"><input id="supplier-phone" type="text" placeholder="Phone (optional)"></div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="submitParty('supplier')">Save karein</button>
+        <button class="btn btn-ghost" onclick="toggleForm('supplier')">Cancel</button>
+      </div>
+    </div>
+    ${suppliers().length ? suppliers().map(s=>partyRow('supplier',s)).join('') : `<div class="empty"><span class="big">Koi supplier nahi</span></div>`}
+    `;
+  }
+
+  app.innerHTML = `
+    <header>
+      <div class="brand">
+        <div class="eyebrow">Shop Manager</div>
+        <h1>ITBIT</h1>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="exportData()" title="Backup save karein">⬇</button>
+        <button class="icon-btn" onclick="triggerImport()" title="Backup se restore karein">⬆</button>
+        <button class="icon-btn" onclick="doLogout()" title="Logout">⏻</button>
+        <input type="file" id="import-file-input" accept="application/json" style="display:none" onchange="importData(this)">
+      </div>
+    </header>
+    ${tabsHtml}
+    ${body}
+  `;
+}
+
+/* ============== PWA setup ============== */
+function generateIcon(){
+  const canvas = document.createElement('canvas');
+  canvas.width = 512; canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+  const grad = ctx.createLinearGradient(0,0,512,512);
+  grad.addColorStop(0,'#22353B'); grad.addColorStop(1,'#141F24');
+  ctx.fillStyle = grad; ctx.fillRect(0,0,512,512);
+  ctx.strokeStyle = '#6FB1E0'; ctx.lineWidth = 10; ctx.strokeRect(20,20,472,472);
+  ctx.fillStyle = '#6FB1E0'; ctx.font = '700 180px Georgia, serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('IT', 256, 285);
+  return canvas.toDataURL('image/png');
+}
+function setupPWA(){
+  try{
+    const iconURL = generateIcon();
+    document.getElementById('apple-icon-link').setAttribute('href', iconURL);
+    document.getElementById('favicon-link').setAttribute('href', iconURL);
+    const manifest = {
+      name: 'ITBIT — Shop Manager', short_name: 'ITBIT',
+      start_url: location.href.split('#')[0], display: 'standalone',
+      background_color: '#141F24', theme_color: '#141F24',
+      icons: [{src:iconURL, sizes:'512x512', type:'image/png'},{src:iconURL, sizes:'192x192', type:'image/png'}]
+    };
+    const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
+    document.getElementById('manifest-link').setAttribute('href', URL.createObjectURL(blob));
+  }catch(e){ console.warn('PWA setup skipped', e); }
+  if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')){
+    try{
+      const swCode = "self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>{});";
+      const swBlob = new Blob([swCode], {type:'application/javascript'});
+      navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(()=>{});
+    }catch(e){}
+  }
+}
+
+/* ============== AUTH ============== */
+function showGate(){
+  document.getElementById('gate').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  showAuthView();
+}
+function hideGate(){
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+function showAuthView(){
+  document.getElementById('gate-auth-view').style.display = 'flex';
+  document.getElementById('gate-forgot-view').style.display = 'none';
+  document.getElementById('gate-recovery-view').style.display = 'none';
+}
+function showForgotView(){
+  document.getElementById('gate-auth-view').style.display = 'none';
+  document.getElementById('gate-forgot-view').style.display = 'flex';
+  document.getElementById('gate-recovery-view').style.display = 'none';
+}
+function showRecoveryView(){
+  document.getElementById('gate-auth-view').style.display = 'none';
+  document.getElementById('gate-forgot-view').style.display = 'none';
+  document.getElementById('gate-recovery-view').style.display = 'flex';
+}
+
+function gateError(msg, isSuccess){
+  const el = document.getElementById('gate-error');
+  el.textContent = msg; el.style.color = isSuccess ? 'var(--income)' : 'var(--expense)';
+}
+async function doLogin(){
+  const email = document.getElementById('gate-email').value.trim();
+  const pass = document.getElementById('gate-pass').value;
+  if(!email || !pass){ gateError('Email aur password dono zaroori hain'); return; }
+  gateError('Login ho raha hai...');
+  const { error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
+  if(error){ gateError(error.message); }
+}
+async function doSignup(){
+  const email = document.getElementById('gate-email').value.trim();
+  const pass = document.getElementById('gate-pass').value;
+  if(!email || !pass){ gateError('Email aur password dono zaroori hain'); return; }
+  if(pass.length < 6){ gateError('Password kam az kam 6 characters ka hona chahiye'); return; }
+  gateError('Account ban raha hai...');
+  const { error } = await supabaseClient.auth.signUp({ email, password: pass });
+  if(error){ gateError(error.message); return; }
+  gateError('Ho gaya! Agar email confirmation on hai to inbox check karein, warna seedha login karein.', true);
+}
+function doLogout(){ supabaseClient.auth.signOut(); }
+
+async function doForgotPassword(){
+  const email = document.getElementById('forgot-email').value.trim();
+  const errEl = document.getElementById('forgot-error');
+  if(!email){ errEl.style.color='var(--expense)'; errEl.textContent = 'Email likhein'; return; }
+  errEl.style.color='var(--ink-dim)'; errEl.textContent = 'Bheja ja raha hai...';
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: window.location.href.split('#')[0] });
+  if(error){ errEl.style.color='var(--expense)'; errEl.textContent = error.message; return; }
+  errEl.style.color='var(--income)'; errEl.textContent = 'Reset link bhej diya hai — email check karein.';
+}
+async function doSetNewPassword(){
+  const pass = document.getElementById('new-pass').value;
+  const errEl = document.getElementById('recovery-error');
+  if(!pass || pass.length < 6){ errEl.style.color='var(--expense)'; errEl.textContent = 'Password kam az kam 6 characters ka ho'; return; }
+  errEl.style.color='var(--ink-dim)'; errEl.textContent = 'Save ho raha hai...';
+  const { error } = await supabaseClient.auth.updateUser({ password: pass });
+  if(error){ errEl.style.color='var(--expense)'; errEl.textContent = error.message; return; }
+  errEl.style.color='var(--income)'; errEl.textContent = 'Password set ho gaya! Login ho rahe hain...';
+  setTimeout(()=>{ showAuthView(); }, 1200);
+}
+
+async function initAuth(){
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if(session && session.user){ currentUser = session.user; hideGate(); loadData(); }
+  else { showGate(); }
+  supabaseClient.auth.onAuthStateChange((event, session)=>{
+    if(event === 'PASSWORD_RECOVERY'){
+      document.getElementById('gate').style.display = 'flex';
+      document.getElementById('app').style.display = 'none';
+      showRecoveryView();
+      return;
+    }
+    if(event === 'SIGNED_IN' && session){ currentUser = session.user; hideGate(); loadData(); }
+    else if(event === 'SIGNED_OUT'){ currentUser = null; records = []; ready = false; showGate(); }
+  });
+}
+
+setupPWA();
+initAuth();
+</script>
+</body>
+</html>
