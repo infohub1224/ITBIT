@@ -308,6 +308,7 @@
     body *{visibility:hidden;}
     #print-area, #print-area *{visibility:visible;}
     #print-area{display:block;position:absolute;top:0;left:0;width:100%;}
+    #print-area.size-a4, #print-area.size-a5{display:flex;flex-direction:column;}
     .gate, .print-modal-backdrop{display:none !important;}
   }
   .inv-letterhead{text-align:center;margin-bottom:12px;border-bottom:2px solid #2E7CD6;padding-bottom:10px;}
@@ -327,10 +328,10 @@
   .inv-totals{font-size:12px;margin-left:auto;width:60%;}
   .inv-totals div{display:flex;justify-content:space-between;padding:3px 0;}
   .inv-totals .grand{font-weight:700;font-size:14px;border-top:1px solid #999;margin-top:4px;padding-top:6px;}
-  .inv-footer{text-align:center;font-size:11px;color:#666;margin-top:16px;}
+  .inv-footer{text-align:center;font-size:11px;color:#666;margin-top:auto;padding-top:16px;}
 
-  #print-area.size-a4{width:190mm;font-size:13px;padding:10mm;color:#111;background:#fff;}
-  #print-area.size-a5{width:130mm;font-size:12px;padding:6mm;color:#111;background:#fff;}
+  #print-area.size-a4{width:190mm;min-height:257mm;font-size:13px;padding:10mm;color:#111;background:#fff;}
+  #print-area.size-a5{width:130mm;min-height:186mm;font-size:12px;padding:6mm;color:#111;background:#fff;}
   #print-area.size-r80{width:76mm;font-size:10.5px;padding:2mm;color:#111;background:#fff;}
   #print-area.size-r80 .inv-shop-name{font-size:15px;}
   #print-area.size-r80 .inv-shop-line{font-size:8.5px;}
@@ -569,6 +570,17 @@ function partyName(type, id){
   const list = type==='customer' ? customers() : suppliers();
   const p = list.find(x=>x.id===id);
   return p ? p.payload.name : 'Unknown';
+}
+
+function saleCustomerDisplay(s){
+  if(s.payload.customerId) return partyName('customer', s.payload.customerId);
+  if(s.payload.walkInName) return s.payload.walkInName;
+  return 'Walk-in';
+}
+function purchaseSupplierDisplay(p){
+  if(p.payload.supplierId) return partyName('supplier', p.payload.supplierId);
+  if(p.payload.walkInName) return p.payload.walkInName;
+  return 'Unlisted Supplier';
 }
 
 function customerBalance(id){
@@ -840,6 +852,8 @@ function updateSaleCalcInputs(){
 async function submitSale(){
   if(editingSaleId && !isAdmin()){ alert('Sirf Admin invoice edit kar sakta hai.'); return; }
   const customerId = document.getElementById('sale-customer').value || null;
+  const walkInName = document.getElementById('sale-walkin-name').value.trim();
+  const walkInPhone = document.getElementById('sale-walkin-phone').value.trim();
   const paid = parseFloat(document.getElementById('sale-paid').value) || 0;
   const validItems = saleItems.filter(it=>it.productId && it.qty>0);
   if(!validItems.length){ alert('Kam az kam ek item add karein'); return; }
@@ -874,10 +888,10 @@ async function submitSale(){
   if(editingSaleId){
     const oldRecord = records.find(r=>r.id===editingSaleId);
     const invoiceNo = oldRecord ? oldRecord.payload.invoiceNo : nextInvoiceNo('sale');
-    updateRecordSilent(editingSaleId, { date:todayStr(), customerId, items, subtotal, discount, tax, total, paid, paymentMode, invoiceNo });
+    updateRecordSilent(editingSaleId, { date:todayStr(), customerId, walkInName:customerId?null:(walkInName||null), walkInPhone:customerId?null:(walkInPhone||null), items, subtotal, discount, tax, total, paid, paymentMode, invoiceNo });
     editingSaleId = null;
   } else {
-    addRecordSilent('sale', { date:todayStr(), customerId, items, subtotal, discount, tax, total, paid, paymentMode, invoiceNo: nextInvoiceNo('sale') });
+    addRecordSilent('sale', { date:todayStr(), customerId, walkInName:customerId?null:(walkInName||null), walkInPhone:customerId?null:(walkInPhone||null), items, subtotal, discount, tax, total, paid, paymentMode, invoiceNo: nextInvoiceNo('sale') });
   }
   items.forEach(it=>{
     const p = productById(it.productId);
@@ -899,6 +913,8 @@ function editSale(id){
   formOpen.sale = true;
   render();
   document.getElementById('sale-customer').value = s.payload.customerId || '';
+  document.getElementById('sale-walkin-name').value = s.payload.walkInName || '';
+  document.getElementById('sale-walkin-phone').value = s.payload.walkInPhone || '';
   document.getElementById('sale-paid').value = s.payload.paid;
   document.getElementById('sale-discount').value = saleDiscount || '';
   if(document.getElementById('sale-payment-mode')) document.getElementById('sale-payment-mode').value = s.payload.paymentMode || 'Cash';
@@ -983,6 +999,8 @@ function updatePurchaseCalcInputs(){
 async function submitPurchase(){
   if(editingPurchaseId && !isAdmin()){ alert('Sirf Admin invoice edit kar sakta hai.'); return; }
   const supplierId = document.getElementById('purchase-supplier').value || null;
+  const purchaseWalkInName = document.getElementById('purchase-walkin-name').value.trim();
+  const purchaseWalkInPhone = document.getElementById('purchase-walkin-phone').value.trim();
   const paid = parseFloat(document.getElementById('purchase-paid').value) || 0;
   const validItems = purchaseItems.filter(it=>it.productId && it.qty>0);
   if(!validItems.length){ alert('Kam az kam ek item add karein'); return; }
@@ -1010,10 +1028,10 @@ async function submitPurchase(){
   if(editingPurchaseId){
     const oldRecord = records.find(r=>r.id===editingPurchaseId);
     const invoiceNo = oldRecord ? oldRecord.payload.invoiceNo : nextInvoiceNo('purchase');
-    updateRecordSilent(editingPurchaseId, { date:todayStr(), supplierId, items, subtotal, discount, tax, total, paid, paymentMode, invoiceNo });
+    updateRecordSilent(editingPurchaseId, { date:todayStr(), supplierId, walkInName:supplierId?null:(purchaseWalkInName||null), walkInPhone:supplierId?null:(purchaseWalkInPhone||null), items, subtotal, discount, tax, total, paid, paymentMode, invoiceNo });
     editingPurchaseId = null;
   } else {
-    addRecordSilent('purchase', { date:todayStr(), supplierId, items, subtotal, discount, tax, total, paid, paymentMode, invoiceNo: nextInvoiceNo('purchase') });
+    addRecordSilent('purchase', { date:todayStr(), supplierId, walkInName:supplierId?null:(purchaseWalkInName||null), walkInPhone:supplierId?null:(purchaseWalkInPhone||null), items, subtotal, discount, tax, total, paid, paymentMode, invoiceNo: nextInvoiceNo('purchase') });
   }
   items.forEach(it=>{
     const p = productById(it.productId);
@@ -1035,6 +1053,8 @@ function editPurchase(id){
   formOpen.purchase = true;
   render();
   document.getElementById('purchase-supplier').value = p.payload.supplierId || '';
+  document.getElementById('purchase-walkin-name').value = p.payload.walkInName || '';
+  document.getElementById('purchase-walkin-phone').value = p.payload.walkInPhone || '';
   document.getElementById('purchase-paid').value = p.payload.paid;
   document.getElementById('purchase-discount').value = purchaseDiscount || '';
   if(document.getElementById('purchase-payment-mode')) document.getElementById('purchase-payment-mode').value = p.payload.paymentMode || 'Cash';
@@ -1105,12 +1125,13 @@ function buildInvoiceHtml(type, id){
   const record = records.find(r=>r.id===id);
   if(!record) return '';
   const isSale = type==='sale';
-  const party = isSale ? partyName('customer', record.payload.customerId) : partyName('supplier', record.payload.supplierId);
+  const party = isSale ? saleCustomerDisplay(record) : purchaseSupplierDisplay(record);
   const partyPhone = (()=>{
     const list = isSale ? customers() : suppliers();
     const pid = isSale ? record.payload.customerId : record.payload.supplierId;
     const p = list.find(x=>x.id===pid);
-    return p ? (p.payload.phone||'') : '';
+    if(p) return p.payload.phone||'';
+    return record.payload.walkInPhone || '';
   })();
   const title = isSale ? 'SALE INVOICE' : 'PURCHASE INVOICE';
   const partyLabel = isSale ? 'Bill To (Customer)' : 'Supplier';
@@ -1268,7 +1289,7 @@ function saleRow(s){
   <div class="entry">
     <div class="left">
       <div>
-        <div class="name">${partyName('customer', s.payload.customerId)} ${badge}</div>
+        <div class="name">${saleCustomerDisplay(s)} ${badge}</div>
         <div class="meta">#${s.payload.invoiceNo||'—'} · ${s.payload.date} · ${s.payload.items.length} item(s)</div>
       </div>
     </div>
@@ -1288,7 +1309,7 @@ function purchaseRow(p){
   <div class="entry">
     <div class="left">
       <div>
-        <div class="name">${partyName('supplier', p.payload.supplierId)} ${badge}</div>
+        <div class="name">${purchaseSupplierDisplay(p)} ${badge}</div>
         <div class="meta">#${p.payload.invoiceNo||'—'} · ${p.payload.date} · ${p.payload.items.length} item(s)</div>
       </div>
     </div>
@@ -1384,11 +1405,15 @@ function partyRow(type, p){
 function render(){
   if(!ready){ app.innerHTML = '<div class="loading">Load ho raha hai...</div>'; return; }
 
+  if(!isAdmin() && !['sales','purchase'].includes(activeTab)){
+    activeTab = 'sales';
+  }
+
   const stats = dashboardStats();
   let body = '';
   const filteredProducts = inventoryFilter==='All' ? products() : products().filter(p=>(p.payload.category||'')===inventoryFilter);
 
-  const tabsHtml = `
+  const tabsHtml = isAdmin() ? `
   <div class="tabs">
     <div class="tab ${activeTab==='dashboard'?'active':''}" onclick="setTab('dashboard')">Dashboard</div>
     <div class="tab ${activeTab==='inventory'?'active':''}" onclick="setTab('inventory')">Stock</div>
@@ -1398,6 +1423,10 @@ function render(){
     <div class="tab ${activeTab==='purchase'?'active':''}" onclick="setTab('purchase')">Purchase</div>
     <div class="tab ${activeTab==='parties'?'active':''}" onclick="setTab('parties')">Parties</div>
     <div class="tab ${activeTab==='analytics'?'active':''}" onclick="setTab('analytics')">Analytics</div>
+  </div>` : `
+  <div class="tabs">
+    <div class="tab ${activeTab==='sales'?'active':''}" onclick="setTab('sales')">Sales</div>
+    <div class="tab ${activeTab==='purchase'?'active':''}" onclick="setTab('purchase')">Purchase</div>
   </div>`;
 
   if(activeTab==='dashboard'){
@@ -1497,6 +1526,10 @@ function render(){
     </div>
     <div class="add-form ${formOpen.sale?'open':''}">
       <div class="row"><select id="sale-customer">${customerOptionsHtml('')}</select></div>
+      <div class="row">
+        <input id="sale-walkin-name" type="text" placeholder="Customer Name (agar list mein nahi hai)">
+        <input id="sale-walkin-phone" type="text" placeholder="Phone (optional)">
+      </div>
       ${saleItems.map((it,idx)=>`
         <div class="item-row">
           <select onchange="updateSaleItem(${idx},'productId',this.value)">${productOptionsHtml(it.productId)}</select>
@@ -1559,6 +1592,10 @@ function render(){
     </div>
     <div class="add-form ${formOpen.purchase?'open':''}">
       <div class="row"><select id="purchase-supplier">${supplierOptionsHtml('')}</select></div>
+      <div class="row">
+        <input id="purchase-walkin-name" type="text" placeholder="Supplier Name (agar list mein nahi hai)">
+        <input id="purchase-walkin-phone" type="text" placeholder="Phone (optional)">
+      </div>
       ${purchaseItems.map((it,idx)=>`
         <div class="item-row">
           <select onchange="updatePurchaseItem(${idx},'productId',this.value)">${productOptionsHtml(it.productId)}</select>
@@ -1711,8 +1748,8 @@ function render(){
         <h1>ITBITS.pk</h1>
       </div>
       <div class="header-actions">
-        <button class="icon-btn" onclick="exportData()" title="Backup save karein">⬇</button>
-        <button class="icon-btn" onclick="triggerImport()" title="Backup se restore karein">⬆</button>
+        ${isAdmin() ? `<button class="icon-btn" onclick="exportData()" title="Backup save karein">⬇</button>` : ''}
+        ${isAdmin() ? `<button class="icon-btn" onclick="triggerImport()" title="Backup se restore karein">⬆</button>` : ''}
         <button class="icon-btn" onclick="doLogout()" title="Logout">⏻</button>
         <input type="file" id="import-file-input" accept="application/json" style="display:none" onchange="importData(this)">
       </div>
