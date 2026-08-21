@@ -380,80 +380,116 @@
   .empty .big{font-family:'Fraunces',serif;font-size:16px;color:var(--ink);display:block;margin-bottom:4px;}
   .loading{text-align:center;padding:40px;color:var(--ink-dim);font-size:13px;}
 
-  /* Login gate — tech / hologram theme */
+  /* Login gate — premium split-screen 3D design */
   .gate{
     position:fixed;inset:0;
+    display:flex;z-index:1000;overflow-y:auto;
+    background:#F3F5FA;
+  }
+  .gate-left{
+    display:none;
+    flex:1 1 50%;position:relative;
     background:
-      radial-gradient(circle at 25% 20%, rgba(62,198,255,0.10), transparent 45%),
-      radial-gradient(circle at 75% 75%, rgba(62,198,255,0.06), transparent 50%),
-      repeating-linear-gradient(0deg, rgba(120,180,220,0.05) 0 1px, transparent 1px 38px),
-      repeating-linear-gradient(90deg, rgba(120,180,220,0.05) 0 1px, transparent 1px 38px),
-      linear-gradient(160deg, #0A121C 0%, #060B12 100%);
-    display:flex;align-items:center;justify-content:center;padding:24px;z-index:1000;overflow:hidden;
+      radial-gradient(circle at 25% 15%, rgba(46,99,235,.30), transparent 55%),
+      radial-gradient(circle at 80% 80%, rgba(46,99,235,.12), transparent 50%),
+      linear-gradient(160deg,#0A1220 0%,#0D1830 100%);
+    padding:60px 56px;align-items:center;
   }
-  .gate-wrap{
-    display:flex;align-items:center;justify-content:center;gap:64px;
-    max-width:900px;width:100%;flex-wrap:wrap;
-  }
-  .gate-dot{
-    position:absolute;border-radius:50%;background:#5FD4FF;
-    box-shadow:0 0 8px 2px rgba(95,212,255,.8);
-    animation:twinkle 3.5s ease-in-out infinite;
-  }
-  @keyframes twinkle{0%,100%{opacity:.25;}50%{opacity:1;}}
+  @media (min-width:900px){ .gate-left{display:flex;} }
+  .gate-left-inner{max-width:400px;color:#EAF0FF;position:relative;z-index:2;}
 
-  /* Hologram globe */
-  .globe-stage{position:relative;width:260px;height:260px;flex:0 0 auto;filter:drop-shadow(0 0 28px rgba(62,198,255,.25));}
-  .globe-sphere{
-    position:absolute;left:30px;top:10px;width:200px;height:200px;border-radius:50%;
-    background:
-      radial-gradient(circle at 32% 28%, rgba(120,210,255,.35), transparent 55%),
-      repeating-linear-gradient(0deg, rgba(95,212,255,.16) 0 1px, transparent 1px 11px),
-      repeating-linear-gradient(90deg, rgba(95,212,255,.16) 0 1px, transparent 1px 11px),
-      radial-gradient(circle, #0E1F30 0%, #081521 75%);
-    border:1px solid rgba(95,212,255,.55);
-    box-shadow:inset 0 0 30px rgba(95,212,255,.25), 0 0 45px rgba(95,212,255,.3);
-    animation:spin-slow 16s linear infinite;
+  .avatar-strip{display:flex;align-items:center;gap:14px;margin-top:44px;}
+  .avatar-group{display:flex;}
+  .avatar-circle{
+    width:38px;height:38px;border-radius:50%;
+    border:2.5px solid #0D1830;
+    margin-left:-10px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:700;color:#fff;
+    box-shadow:0 4px 10px rgba(0,0,0,.35);
   }
-  @keyframes spin-slow{from{background-position:0 0,0 0,0 0,0 0;}to{background-position:0 0,200px 0,0 200px,0 0;}}
-  .globe-ring{
-    position:absolute;left:5px;top:95px;width:250px;height:70px;border-radius:50%;
-    border:1px solid rgba(95,212,255,.45);
-    transform:rotate(-6deg);
+  .avatar-circle:first-child{margin-left:0;}
+  .avatar-circle.a1{background:linear-gradient(155deg,#5B8CFF,#2E63EB);}
+  .avatar-circle.a2{background:linear-gradient(155deg,#3FCF8E,#1FA766);}
+  .avatar-circle.a3{background:linear-gradient(155deg,#F0A93E,#C98A2B);}
+  .avatar-circle.a4{background:linear-gradient(155deg,#B57BE0,#8B5CF6);}
+  .avatar-more{
+    width:38px;height:38px;border-radius:50%;
+    border:2.5px solid #0D1830;margin-left:-10px;
+    background:#1B2C4A;color:#9FB4E0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:10.5px;font-weight:700;
   }
-  .globe-ring.r2{left:20px;top:105px;width:220px;height:52px;border-color:rgba(95,212,255,.22);transform:rotate(-6deg) scale(1.06);}
-  .globe-base{
-    position:absolute;left:88px;top:206px;width:84px;height:22px;
-    background:linear-gradient(180deg,#1B2C3A,#0A141C);
-    border:1px solid rgba(95,212,255,.4);border-radius:6px;
-    box-shadow:0 0 18px rgba(95,212,255,.3);
+  .avatar-strip-text{font-size:12px;color:#8FA0C0;line-height:1.4;}
+  .avatar-strip-text b{color:#EAF0FF;font-weight:700;}
+  .avatar-stars{display:flex;gap:2px;margin-bottom:2px;}
+  .avatar-stars svg{width:11px;height:11px;fill:#F0A93E;stroke:none;}
+  .gate-brand-mark{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#7FB2FF;font-weight:700;margin-bottom:20px;}
+  .gate-left h1{font-family:'Fraunces',serif;font-size:32px;line-height:1.2;margin:0 0 14px;font-weight:600;}
+  .gate-left p{color:#8FA0C0;font-size:13.5px;margin:0 0 50px;line-height:1.6;}
+
+  .gate-left{overflow:hidden;}
+  .glow-blob{position:absolute;border-radius:50%;filter:blur(50px);opacity:.5;pointer-events:none;animation:blobDrift 12s ease-in-out infinite;}
+  .glow-blob.b1{width:260px;height:260px;background:#2E63EB;top:-60px;left:-40px;animation-delay:0s;}
+  .glow-blob.b2{width:220px;height:220px;background:#5B8CFF;bottom:-40px;right:-20px;animation-delay:3s;}
+  @keyframes blobDrift{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(20px,-16px) scale(1.08);}}
+
+  .mock-stack{position:relative;height:220px;}
+  .mock-card{
+    position:absolute;width:270px;border-radius:16px;
+    background:linear-gradient(155deg,#182640,#101B30);
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 25px 50px rgba(0,0,0,.5);
+    padding:16px 18px;
+    animation:cardFloat 5s ease-in-out infinite;
   }
-  .globe-base::before{
-    content:'';position:absolute;left:-14px;top:-8px;width:112px;height:10px;
-    background:linear-gradient(180deg,#233A4A,#0E1B24);
-    border:1px solid rgba(95,212,255,.35);border-radius:5px;
+  .mock-card-1{top:0;left:0;transform:rotate(-7deg);z-index:1;opacity:.85;animation-delay:.4s;}
+  .mock-card-2{top:26px;left:34px;transform:rotate(4deg);z-index:2;box-shadow:0 30px 55px rgba(0,0,0,.55);animation-delay:1.6s;}
+  .mock-card-3{top:52px;left:68px;transform:rotate(-2deg);z-index:3;background:linear-gradient(155deg,#1E2E52,#111D38);box-shadow:0 40px 65px rgba(0,0,0,.6);animation-delay:0s;}
+  @keyframes cardFloat{
+    0%,100%{ transform:translateY(0) rotate(var(--rot,0deg)); }
+    50%{ transform:translateY(-9px) rotate(var(--rot,0deg)); }
   }
+  .mock-card-1{--rot:-7deg;}
+  .mock-card-2{--rot:4deg;}
+  .mock-card-3{--rot:-2deg;}
+
+  .mock-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+  .mock-icon{width:24px;height:24px;border-radius:7px;background:rgba(46,99,235,.22);color:#7FB2FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .mock-icon svg{width:13px;height:13px;}
+  .mock-label{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:#7FB2FF;font-weight:700;}
+  .mock-bar{height:7px;border-radius:4px;background:linear-gradient(90deg,#2E63EB,#5B8CFF);margin-bottom:7px;transform:scaleX(0);transform-origin:left;animation:barGrow 1s ease-out forwards;}
+  @keyframes barGrow{to{transform:scaleX(1);}}
+  .mock-dots{display:flex;gap:5px;margin-top:10px;}
+  .mock-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);animation:dotPulse 1.6s ease-in-out infinite;}
+  .mock-dots span:first-child{background:#2E63EB;animation-delay:0s;}
+  .mock-dots span:nth-child(2){animation-delay:.2s;}
+  .mock-dots span:nth-child(3){animation-delay:.4s;}
+  @keyframes dotPulse{0%,100%{opacity:.4;transform:scale(1);}50%{opacity:1;transform:scale(1.3);}}
+
+  .gate-right{flex:1 1 50%;display:flex;align-items:center;justify-content:center;padding:28px 20px;}
 
   .gate-card{
-    flex:1 1 300px;max-width:340px;
-    background:rgba(13,22,34,.72);backdrop-filter:blur(14px);
-    border:1px solid rgba(95,212,255,.25);border-radius:18px;
-    padding:32px 28px;box-shadow:0 0 40px rgba(95,212,255,.08);
+    flex:1 1 300px;max-width:380px;width:100%;
+    background:#fff;border-radius:20px;
+    padding:38px 32px;
+    box-shadow:0 30px 60px rgba(30,40,60,.14), 0 8px 20px rgba(30,40,60,.06);
+    border:1px solid #EEF1F8;
     text-align:left;
   }
-  .gate-card .gate-eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#5FD4FF;font-weight:600;}
-  .gate-card h1{font-family:'Fraunces',serif;font-size:26px;margin:6px 0 4px;font-weight:600;color:#F2F8FC;}
-  .gate-card p{color:#8AA3B5;font-size:12.5px;margin:0 0 22px;line-height:1.5;}
+  .gate-card .gate-eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:700;}
+  .gate-card h1{font-family:'Fraunces',serif;font-size:26px;margin:6px 0 4px;font-weight:700;color:#1E2733;}
+  .gate-card p{color:#6B7686;font-size:12.5px;margin:0 0 24px;line-height:1.5;}
   .gate-actions{display:flex;flex-direction:column;gap:11px;width:100%;}
   .gate-actions .btn{padding:13px;font-size:14px;}
-  .gate-input{background:rgba(6,12,20,.7);border:1px solid rgba(95,212,255,.25);border-radius:10px;padding:12px 14px;color:#EAF4FA;font-size:14px;font-family:'Inter';outline:none;width:100%;}
-  .gate-input:focus{border-color:#5FD4FF;box-shadow:0 0 0 3px rgba(95,212,255,.12);}
-  .gate-input::placeholder{color:#557085;}
+  .gate-input{background:#FAFBFD;border:1px solid #E6E9F2;border-radius:10px;padding:12px 14px;color:#1E2733;font-size:14px;font-family:'Inter';outline:none;width:100%;box-shadow:inset 0 1px 2px rgba(30,40,60,.05);}
+  .gate-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,99,235,.12);}
+  .gate-input::placeholder{color:#9AA5B5;}
   .gate-error{font-size:12px;color:var(--expense);min-height:16px;text-align:left;}
-  .gate-link{font-size:12px;color:#5FD4FF;text-align:center;cursor:pointer;margin-top:2px;text-decoration:underline;}
-  .btn-tech{background:linear-gradient(135deg,#2E8FE0,#1B5FC4);color:#fff;box-shadow:0 4px 18px rgba(46,143,224,.4);}
-  .btn-tech:hover{filter:brightness(1.08);}
-  .btn-tech-ghost{background:transparent;border:1px solid rgba(95,212,255,.35);color:#BFE6F7;}
+  .gate-link{font-size:12px;color:var(--blue);text-align:center;cursor:pointer;margin-top:2px;text-decoration:underline;}
+  .btn-tech{background:linear-gradient(135deg,#3E74F5,#1B4FD1);color:#fff;box-shadow:0 10px 24px rgba(46,99,235,.32);}
+  .btn-tech:hover{filter:brightness(1.05);}
+  .btn-tech-ghost{background:#fff;border:1px solid #E6E9F2;color:#3A4658;}
 
   /* Print size picker modal */
   .print-modal-backdrop{position:fixed;inset:0;background:rgba(6,10,16,.75);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;}
@@ -527,13 +563,64 @@
 </div>
 <div id="print-area"></div>
 <div class="gate" id="gate" style="display:none">
-  <div class="gate-wrap">
-    <div class="globe-stage">
-      <div class="globe-ring r2"></div>
-      <div class="globe-ring"></div>
-      <div class="globe-sphere"></div>
-      <div class="globe-base"></div>
+  <div class="gate-left">
+    <div class="glow-blob b1"></div>
+    <div class="glow-blob b2"></div>
+    <div class="gate-left-inner">
+      <div class="gate-brand-mark">ITBITS.pk · Shop Management</div>
+      <h1>Manage your shop<br>with confidence.</h1>
+      <p>Sales, purchases, inventory aur ledger — sab kuch ek jagah, real-time.</p>
+      <div class="mock-stack">
+        <div class="mock-card mock-card-1">
+          <div class="mock-head">
+            <div class="mock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+            <div class="mock-label">Inventory</div>
+          </div>
+          <div class="mock-bar" style="width:70%;animation-delay:.2s"></div>
+          <div class="mock-bar" style="width:45%;animation-delay:.35s"></div>
+          <div class="mock-bar" style="width:60%;animation-delay:.5s"></div>
+        </div>
+        <div class="mock-card mock-card-2">
+          <div class="mock-head">
+            <div class="mock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+            <div class="mock-label">Sales Today</div>
+          </div>
+          <div class="mock-bar" style="width:85%;animation-delay:.25s"></div>
+          <div class="mock-bar" style="width:55%;animation-delay:.4s"></div>
+          <div class="mock-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="mock-card mock-card-3">
+          <div class="mock-head">
+            <div class="mock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <div class="mock-label">Revenue</div>
+          </div>
+          <div class="mock-bar" style="width:95%;animation-delay:.15s"></div>
+          <div class="mock-bar" style="width:40%;animation-delay:.3s"></div>
+          <div class="mock-bar" style="width:65%;animation-delay:.45s"></div>
+        </div>
+      </div>
+      <div class="avatar-strip">
+        <div class="avatar-group">
+          <div class="avatar-circle a1">AZ</div>
+          <div class="avatar-circle a2">RK</div>
+          <div class="avatar-circle a3">SM</div>
+          <div class="avatar-circle a4">HB</div>
+          <div class="avatar-more">+8</div>
+        </div>
+        <div class="avatar-strip-text">
+          <div class="avatar-stars">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9"/></svg>
+          </div>
+          Trusted by <b>shop owners</b> across Pakistan
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="gate-right">
     <div class="gate-card">
       <div class="gate-eyebrow">Shop Management</div>
       <h1>ITBITS.pk</h1>
@@ -547,22 +634,22 @@
         <div class="gate-link" onclick="showForgotView()">Forgot password?</div>
       </div>
       <div class="gate-actions" id="gate-forgot-view" style="display:none">
-        <p style="margin:0 0 4px;font-size:12px;color:#8AA3B5;">Enter your email and we'll send you a reset link.</p>
+        <p style="margin:0 0 4px;font-size:12px;color:#6B7686;">Enter your email and we'll send you a reset link.</p>
         <input id="forgot-email" class="gate-input" type="email" placeholder="Email" autocomplete="email">
         <div id="forgot-error" class="gate-error"></div>
         <button class="btn btn-tech" onclick="doForgotPassword()">Send Reset Link</button>
         <div class="gate-link" onclick="showAuthView()">Back to Login</div>
       </div>
       <div class="gate-actions" id="gate-recovery-view" style="display:none">
-        <p style="margin:0 0 4px;font-size:12px;color:#8AA3B5;">Enter your new password.</p>
+        <p style="margin:0 0 4px;font-size:12px;color:#6B7686;">Enter your new password.</p>
         <input id="new-pass" class="gate-input" type="password" placeholder="New password" autocomplete="new-password">
         <div id="recovery-error" class="gate-error"></div>
         <button class="btn btn-tech" onclick="doSetNewPassword()">Set Password</button>
       </div>
+      <div style="text-align:center;font-size:10px;color:#9AA5B5;margin-top:22px;">
+        Developed by Zahid Sultan · 0345-0723317
+      </div>
     </div>
-  </div>
-  <div style="position:absolute;bottom:16px;left:0;right:0;text-align:center;font-size:10.5px;color:#557085;">
-    Developed by Zahid Sultan · 0345-0723317
   </div>
 </div>
 
