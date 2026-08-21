@@ -17,29 +17,29 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
-    --bg:#141F24;
-    --bg-deep:#0D1518;
-    --card:#1C2C31;
-    --card-2:#22353B;
-    --line:#31474E;
-    --ink:#EFF3F2;
-    --ink-dim:#8FA5AA;
-    --blue:#6FB1E0;
-    --blue-dim:#26414D;
-    --gold:#D9B26A;
-    --income:#7FCB9A;
-    --income-dim:#3E5A48;
-    --expense:#E8795F;
-    --expense-dim:#5A3E38;
-    --radius:18px;
+    --bg:#F3F5FA;
+    --bg-deep:#FFFFFF;
+    --card:#FFFFFF;
+    --card-2:#FFFFFF;
+    --line:#E6E9F2;
+    --ink:#1E2733;
+    --ink-dim:#6B7686;
+    --blue:#2E63EB;
+    --blue-dim:#E8EEFF;
+    --gold:#C98A2B;
+    --gold-dim:#FBF0DD;
+    --income:#1FA766;
+    --income-dim:#E4F8EE;
+    --expense:#E1483C;
+    --expense-dim:#FCEAE9;
+    --bg-soft:#EEF1F8;
+    --radius:16px;
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
     font-family:'Inter',sans-serif;
-    background:
-      repeating-linear-gradient(180deg, transparent 0 39px, rgba(255,255,255,0.02) 39px 40px),
-      radial-gradient(circle at 20% 0%, #1B2A30 0%, var(--bg) 55%);
+    background:var(--bg);
     color:var(--ink);
     min-height:100vh;
     padding-bottom:40px;
@@ -50,8 +50,9 @@
   .shell{display:flex;min-height:100vh;}
   .sidebar{
     width:230px;flex-shrink:0;
-    background:linear-gradient(180deg,var(--card-2),var(--bg-deep));
+    background:var(--card);
     border-right:1px solid var(--line);
+    box-shadow:2px 0 12px rgba(30,40,60,.04);
     padding:20px 14px;
     position:fixed;top:0;bottom:0;left:0;
     overflow-y:auto;
@@ -67,7 +68,7 @@
   .side-nav-item svg{width:16px;height:16px;flex-shrink:0;}
   .side-nav-item:hover{background:rgba(111,177,224,.08);color:var(--ink);}
   .side-nav-item.active{background:var(--blue-dim);color:var(--blue);box-shadow:inset 0 0 0 1px rgba(111,177,224,.25);}
-  .side-role{margin-top:16px;padding:12px;border-radius:10px;background:var(--bg-deep);border:1px solid var(--line);font-size:11px;color:var(--ink-dim);}
+  .side-role{margin-top:16px;padding:12px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--line);font-size:11px;color:var(--ink-dim);}
   .side-role .role-badge{display:inline-block;margin-top:4px;}
   .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(6,10,16,.6);z-index:400;}
 
@@ -75,7 +76,7 @@
   .topbar{
     display:flex;align-items:center;justify-content:space-between;
     padding:14px 26px;border-bottom:1px solid var(--line);
-    background:rgba(13,21,24,.85);backdrop-filter:blur(8px);
+    background:rgba(255,255,255,.85);backdrop-filter:blur(8px);
     position:sticky;top:0;z-index:100;
   }
   .topbar .page-title{font-family:'Fraunces',serif;font-size:19px;font-weight:600;display:flex;align-items:center;gap:10px;}
@@ -98,7 +99,7 @@
   .brand .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:600;}
   .brand h1{font-family:'Fraunces',serif;font-size:24px;margin:2px 0 0;font-weight:600;letter-spacing:-.01em;}
   .header-actions{display:flex;gap:6px;align-items:center;}
-  .icon-btn{background:linear-gradient(160deg,var(--card-2),var(--card));border:1px solid var(--line);color:var(--ink-dim);width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.05);transition:transform .1s;}
+  .icon-btn{background:#fff;border:1px solid var(--line);color:var(--ink-dim);width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;box-shadow:0 1px 3px rgba(30,40,60,.08);transition:transform .1s;}
   .icon-btn:active{transform:translateY(1px);box-shadow:0 1px 2px rgba(0,0,0,.35);}
   .icon-btn:hover{color:var(--blue);border-color:var(--blue);}
 
@@ -108,7 +109,7 @@
     .stat-grid{grid-template-columns:repeat(4,1fr);}
     .stat-card.wide{grid-column:span 4;}
   }
-  .stat-card{background:linear-gradient(160deg,var(--card-2),var(--card));border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 6px 16px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.05);}
+  .stat-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 2px 10px rgba(30,40,60,.06);}
   .stat-card .k{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-dim);}
   .stat-card .v{font-family:'Fraunces',serif;font-size:20px;font-weight:600;margin-top:4px;}
   .stat-card.wide{grid-column:1 / -1;}
@@ -131,7 +132,7 @@
       radial-gradient(circle at 85% 0%, rgba(111,177,224,.10), transparent 55%),
       linear-gradient(160deg,var(--card-2),var(--card));
     border:1px solid var(--line);border-radius:20px;padding:22px 20px;margin-bottom:16px;position:relative;overflow:hidden;
-    box-shadow:0 10px 30px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06);
+    box-shadow:0 4px 18px rgba(30,40,60,.07);
   }
   .hero-top{display:flex;justify-content:space-between;align-items:flex-start;}
   .hero-label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-dim);}
@@ -147,7 +148,7 @@
   .hero-bar-lbl{font-size:9px;color:var(--ink-dim);}
 
   /* Activity feed */
-  .activity-row{display:flex;align-items:center;gap:12px;background:linear-gradient(160deg,var(--card-2),var(--card));border:1px solid var(--line);border-radius:13px;padding:11px 13px;margin-bottom:8px;box-shadow:0 4px 12px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.04);}
+  .activity-row{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:11px 13px;margin-bottom:8px;box-shadow:0 1px 6px rgba(30,40,60,.05);}
   .activity-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .activity-icon svg{width:15px;height:15px;}
   .activity-icon.sale{background:rgba(111,177,224,.14);color:var(--blue);}
@@ -175,20 +176,132 @@
   .cat-bar-head{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;}
   .cat-bar-head .cat-name{font-weight:600;}
   .cat-bar-head .cat-val{color:var(--blue);font-weight:600;}
-  .cat-bar-track{height:8px;background:var(--bg-deep);border-radius:100px;overflow:hidden;}
+  .cat-bar-track{height:8px;background:var(--bg-soft);border-radius:100px;overflow:hidden;}
   .cat-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),#8FC8ED);border-radius:100px;}
 
-  .rank-row{display:flex;align-items:center;gap:12px;background:linear-gradient(160deg,var(--card-2),var(--card));border:1px solid var(--line);border-radius:13px;padding:11px 13px;margin-bottom:8px;box-shadow:0 4px 12px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.04);}
+  .rank-row{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:11px 13px;margin-bottom:8px;box-shadow:0 1px 6px rgba(30,40,60,.05);}
   .rank-badge{width:26px;height:26px;border-radius:8px;background:var(--blue-dim);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
   .rank-body{flex:1;min-width:0;}
   .rank-title{font-size:13px;font-weight:600;}
   .rank-sub{font-size:11px;color:var(--ink-dim);margin-top:1px;}
   .rank-amt{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--blue);flex-shrink:0;}
 
+  /* ===== New dashboard layout (RetailLogic-style) ===== */
+  .dash-top-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:16px;}
+  @media (min-width:900px){ .dash-top-grid{grid-template-columns:2fr 1fr;} }
+
+  .chart-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:0 2px 10px rgba(30,40,60,.05);}
+  .chart-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+  .chart-card-head h3{font-size:15px;font-weight:700;margin:0;}
+  .chart-card-head .sub{font-size:11.5px;color:var(--ink-dim);}
+  .chart-legend{display:flex;gap:16px;margin:8px 0 12px;font-size:12px;color:var(--ink-dim);}
+  .chart-legend span{display:flex;align-items:center;gap:6px;}
+  .chart-legend .dot{width:9px;height:9px;border-radius:2px;}
+  .chart-legend .dot.sales{background:var(--blue);}
+  .chart-legend .dot.purch{background:var(--gold);}
+
+  .bar30-wrap{display:flex;align-items:flex-end;gap:3px;height:180px;overflow-x:auto;padding-top:8px;}
+  .bar30-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;flex:0 0 auto;width:16px;height:100%;}
+  .bar30-bars{display:flex;gap:1.5px;align-items:flex-end;height:150px;}
+  .bar30-bar{width:6px;border-radius:2px 2px 0 0;min-height:1px;}
+  .bar30-bar.sales{background:var(--blue);}
+  .bar30-bar.purch{background:var(--gold);}
+  .bar30-lbl{font-size:8px;color:var(--ink-dim);writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;}
+
+  .dash-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .dash-stat-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 2px 10px rgba(30,40,60,.05);}
+  .dash-stat-card .icon-badge{margin-bottom:14px;}
+  .dash-stat-card .k{font-size:12.5px;color:var(--ink-dim);margin-bottom:2px;}
+  .dash-stat-card .v{font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:var(--ink);}
+  .dash-stat-card .sub{font-size:11px;color:var(--ink-dim);margin-top:2px;}
+
+  .dash-bottom-grid{display:grid;grid-template-columns:1fr;gap:16px;}
+  @media (min-width:1050px){ .dash-bottom-grid{grid-template-columns:1fr 1fr 1.2fr;} }
+
+  .donut-wrap{position:relative;width:190px;height:190px;margin:10px auto;border-radius:50%;}
+  .donut-hole{position:absolute;inset:32px;background:#fff;border-radius:50%;}
+  .donut-badge{position:absolute;background:#fff;border-radius:100px;padding:6px 10px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(30,40,60,.12);}
+  .donut-legend{margin-top:10px;}
+  .donut-legend-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink-dim);padding:5px 0;border-top:1px solid var(--line);}
+  .donut-legend-row:first-child{border-top:none;}
+  .donut-legend-row .lbl{display:flex;align-items:center;gap:7px;}
+  .donut-legend-row .lbl .dot{width:9px;height:9px;border-radius:50%;}
+  .donut-legend-row .amt{font-weight:600;color:var(--ink);}
+  .empty-donut{width:190px;height:190px;margin:10px auto;border-radius:50%;background:var(--bg-soft);display:flex;align-items:center;justify-content:center;color:var(--ink-dim);font-size:12px;text-align:center;}
+
+  .ract-row{display:flex;align-items:center;gap:11px;padding:10px 0;border-top:1px solid var(--line);}
+  .ract-row:first-child{border-top:none;}
+  .ract-icon{width:32px;height:32px;border-radius:9px;background:var(--income-dim);color:var(--income);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .ract-icon svg{width:15px;height:15px;}
+  .ract-body{flex:1;min-width:0;}
+  .ract-title{font-size:11px;color:var(--ink-dim);font-weight:600;}
+  .ract-sub{font-size:12.5px;color:var(--ink);margin-top:1px;}
+  .ract-amt{font-size:13px;font-weight:700;color:var(--income);flex-shrink:0;}
+
+  /* ===== ERP list/page layout (Phase 1) ===== */
+  .page-header-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;}
+  .page-header-row h2{font-family:'Fraunces',serif;font-size:20px;margin:0;font-weight:700;}
+  .page-header-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .ph-btn{padding:9px 15px;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--blue);display:inline-flex;align-items:center;gap:6px;}
+  .ph-btn svg{width:14px;height:14px;}
+  .ph-btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);}
+  .ph-btn.ghost{background:#fff;color:var(--ink-dim);}
+
+  .draft-banner{display:flex;justify-content:space-between;align-items:center;background:var(--gold-dim);border:1px solid #F0DDB0;border-radius:12px;padding:12px 16px;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+  .draft-banner .dtag{font-size:10px;font-weight:700;background:var(--gold);color:#fff;padding:2px 8px;border-radius:100px;margin-right:8px;}
+  .draft-banner .dtitle{font-size:13px;font-weight:700;}
+  .draft-banner .dmeta{font-size:11px;color:var(--ink-dim);margin-top:2px;}
+
+  .list-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px;}
+  .list-toolbar input[type=text], .list-toolbar input[type=search]{flex:1;min-width:180px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:13px;color:var(--ink);}
+
+  .data-table-wrap{background:#fff;border:1px solid var(--line);border-radius:14px;overflow-x:auto;box-shadow:0 2px 10px rgba(30,40,60,.05);}
+  .data-table{width:100%;border-collapse:collapse;min-width:640px;}
+  .data-table thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-dim);padding:12px 14px;border-bottom:1px solid var(--line);white-space:nowrap;}
+  .data-table tbody td{padding:13px 14px;font-size:13px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  .data-table tbody tr:last-child td{border-bottom:none;}
+  .data-table tbody tr:hover td{background:var(--bg-soft);}
+  .dt-avatar{width:26px;height:26px;border-radius:50%;background:var(--blue-dim);color:var(--blue);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-right:8px;flex-shrink:0;}
+  .dt-customer{display:flex;align-items:center;}
+  .dt-sub{font-size:11px;color:var(--ink-dim);margin-top:2px;}
+  .dt-actions{display:flex;gap:6px;}
+  .dt-icon-btn{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink-dim);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;}
+  .dt-icon-btn:hover{color:var(--blue);border-color:var(--blue);}
+  .dt-icon-btn svg{width:13px;height:13px;}
+  .dt-invoice-link{color:var(--blue);font-weight:600;cursor:pointer;text-decoration:none;}
+  .detail-subrow td{background:var(--bg-soft);padding:14px 18px;}
+
+  .form-page-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px;box-shadow:0 2px 10px rgba(30,40,60,.05);}
+  .form-page-grid{display:grid;grid-template-columns:1fr;gap:14px;}
+  @media (min-width:800px){ .form-page-grid.cols3{grid-template-columns:1fr 1fr 1fr;} .form-page-grid.cols2{grid-template-columns:1fr 1fr;} }
+  .fp-field label{display:block;font-size:12px;font-weight:600;color:var(--ink-dim);margin-bottom:5px;}
+  .fp-field input, .fp-field select{width:100%;background:#FAFBFD;border:1px solid var(--line);border-radius:9px;padding:10px 12px;font-size:13px;color:var(--ink);box-sizing:border-box;}
+  .seg-toggle{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;}
+  .seg-toggle-btn{flex:1;text-align:center;padding:10px;font-size:13px;font-weight:700;cursor:pointer;background:#FAFBFD;color:var(--ink-dim);}
+  .seg-toggle-btn.active{background:var(--blue);color:#fff;}
+
+  .product-search-wrap{position:relative;margin-bottom:10px;}
+  .product-search-results{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:0 0 10px 10px;box-shadow:0 8px 20px rgba(30,40,60,.12);z-index:20;max-height:220px;overflow-y:auto;}
+  .psr-item{padding:10px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;}
+  .psr-item:last-child{border-bottom:none;}
+  .psr-item:hover{background:var(--bg-soft);}
+  .psr-item .nm{font-weight:600;}
+  .psr-item .pr{color:var(--ink-dim);font-size:12px;}
+  .cart-empty{font-size:12.5px;color:var(--ink-dim);padding:8px 2px;}
+  .cart-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);}
+  .cart-row:last-child{border-bottom:none;}
+  .cart-name{flex:1;font-size:13px;font-weight:600;min-width:0;}
+  .cart-row input{width:64px;background:#FAFBFD;border:1px solid var(--line);border-radius:7px;padding:7px 8px;font-size:12.5px;text-align:center;}
+  .cart-linetotal{width:80px;text-align:right;font-size:12.5px;font-weight:600;color:var(--ink);}
+
+  .totals-footer{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;margin-top:16px;}
+  .totals-footer .subtot{font-size:12.5px;color:var(--ink-dim);}
+  .totals-footer .grandtot{font-family:'Fraunces',serif;font-size:26px;font-weight:700;}
+
   /* Tabs */
-  .tabs{display:flex;gap:5px;margin:14px 0 12px;background:var(--card);border:1px solid var(--line);padding:4px;border-radius:100px;overflow-x:auto;}
+  .tabs{display:flex;gap:5px;margin:14px 0 12px;background:var(--bg-soft);border:1px solid var(--line);padding:4px;border-radius:100px;overflow-x:auto;}
   .tab{flex:1;text-align:center;padding:9px 4px;font-size:11.5px;font-weight:600;color:var(--ink-dim);border-radius:100px;cursor:pointer;user-select:none;white-space:nowrap;}
-  .tab.active{background:var(--bg-deep);color:var(--blue);}
+  .tab.active{background:#fff;color:var(--blue);box-shadow:0 1px 4px rgba(30,40,60,.08);}
 
   .section-title{font-family:'Fraunces',serif;font-size:15px;color:var(--ink-dim);margin:18px 2px 8px;display:flex;justify-content:space-between;align-items:baseline;}
   .section-title span.count{font-size:11px;font-family:'Inter';color:var(--ink-dim);}
@@ -196,23 +309,23 @@
   .fab-add{width:100%;padding:12px;border-radius:12px;border:1px dashed var(--line);background:transparent;color:var(--ink-dim);font-weight:600;font-size:13px;cursor:pointer;margin-bottom:14px;}
   .fab-add:hover{border-color:var(--blue);color:var(--blue);}
 
-  .add-form{background:linear-gradient(160deg,var(--card-2),var(--card));border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px;display:none;box-shadow:0 8px 24px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.05);}
+  .add-form{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px;display:none;box-shadow:0 2px 14px rgba(30,40,60,.06);}
   .add-form.open{display:block;}
   .add-form .row{display:flex;gap:8px;margin-bottom:8px;}
-  .add-form input, .add-form select{flex:1;background:var(--bg-deep);border:1px solid var(--line);border-radius:10px;padding:11px 12px;color:var(--ink);font-size:14px;font-family:'Inter';outline:none;box-shadow:inset 0 2px 5px rgba(0,0,0,.35);}
+  .add-form input, .add-form select{flex:1;background:#FAFBFD;border:1px solid var(--line);border-radius:10px;padding:11px 12px;color:var(--ink);font-size:14px;font-family:'Inter';outline:none;box-shadow:inset 0 1px 2px rgba(30,40,60,.06);}
   .add-form input:focus, .add-form select:focus{border-color:var(--blue);}
   .add-form input::placeholder{color:#5E7278;}
   .add-form .actions{display:flex;gap:8px;}
   .btn{border:none;border-radius:10px;padding:11px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter';transition:transform .1s,box-shadow .1s;}
   .btn-primary{background:linear-gradient(160deg,#7FC0EE,var(--blue));color:#0D1518;flex:1;box-shadow:0 4px 12px rgba(111,177,224,.35),inset 0 1px 0 rgba(255,255,255,.3);}
   .btn-primary:active{transform:translateY(1px);box-shadow:0 2px 6px rgba(111,177,224,.3);}
-  .btn-ghost{background:linear-gradient(160deg,var(--card-2),var(--card));border:1px solid var(--line);color:var(--ink-dim);box-shadow:0 2px 6px rgba(0,0,0,.3);}
+  .btn-ghost{background:var(--bg-soft);border:1px solid var(--line);color:var(--ink-dim);box-shadow:none;}
   .btn-ghost:active{transform:translateY(1px);}
   .btn-gold{background:linear-gradient(160deg,#E8CE97,var(--gold));color:#1B2A2F;flex:1;box-shadow:0 4px 12px rgba(217,178,106,.35),inset 0 1px 0 rgba(255,255,255,.3);}
   .btn-gold:active{transform:translateY(1px);box-shadow:0 2px 6px rgba(217,178,106,.3);}
 
   /* Generic entry card */
-  .entry{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(160deg,var(--card-2),var(--card));border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:9px;box-shadow:0 4px 14px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.05);}
+  .entry{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:9px;box-shadow:0 1px 6px rgba(30,40,60,.05);}
   .entry .left{display:flex;align-items:center;gap:12px;min-width:0;}
   .entry .name{font-size:14px;font-weight:600;}
   .entry .meta{font-size:11px;color:var(--ink-dim);margin-top:2px;}
@@ -240,7 +353,7 @@
   .item-row input{flex:1;min-width:0;}
   .item-row .rm{background:none;border:none;color:var(--expense);font-size:16px;cursor:pointer;padding:4px 6px;}
   .add-item-btn{width:100%;padding:9px;border-radius:9px;border:1px dashed var(--line);background:transparent;color:var(--ink-dim);font-size:12px;font-weight:600;cursor:pointer;margin-bottom:10px;}
-  .invoice-total{display:flex;justify-content:space-between;align-items:center;background:var(--bg-deep);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+  .invoice-total{display:flex;justify-content:space-between;align-items:center;background:var(--bg-soft);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
   .invoice-total .lbl{font-size:12px;color:var(--ink-dim);}
   .invoice-total .val{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--blue);}
   .calc-breakdown{font-size:12px;color:var(--ink-dim);margin-bottom:8px;}
@@ -256,7 +369,7 @@
   .ledger-credit{color:var(--expense);font-weight:600;}
   .ledger-running{font-family:'Fraunces',serif;font-size:13px;font-weight:600;color:var(--blue);min-width:70px;text-align:right;}
 
-  .party-detail{background:linear-gradient(160deg,var(--card-2),var(--card));border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 6px 18px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.05);}
+  .party-detail{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 2px 12px rgba(30,40,60,.06);}
   .party-detail .close-x{float:right;cursor:pointer;color:var(--ink-dim);font-size:16px;}
   .empty{text-align:center;padding:30px 10px;color:var(--ink-dim);font-size:13px;border:1px dashed var(--line);border-radius:14px;}
   .empty .big{font-family:'Fraunces',serif;font-size:16px;color:var(--ink);display:block;margin-bottom:4px;}
@@ -343,7 +456,7 @@
   .print-modal h3{font-family:'Fraunces',serif;font-size:17px;margin:0 0 4px;color:var(--ink);}
   .print-modal p{font-size:12px;color:var(--ink-dim);margin:0 0 16px;}
   .print-size-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-  .print-size-btn{background:var(--bg-deep);border:1px solid var(--line);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;color:var(--ink);}
+  .print-size-btn{background:var(--bg-soft);border:1px solid var(--line);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;color:var(--ink);}
   .print-size-btn:hover{border-color:var(--blue);}
   .print-size-btn .sz-name{font-weight:700;font-size:13px;}
   .print-size-btn .sz-desc{font-size:10px;color:var(--ink-dim);margin-top:2px;}
@@ -473,6 +586,15 @@ let saleDiscount = 0;
 let saleTaxPercent = 0;
 let purchaseDiscount = 0;
 let purchaseTaxPercent = 0;
+let salesView = 'list'; // 'list' | 'new'
+let purchaseView = 'list'; // 'list' | 'new'
+let saleSearchQuery = '';
+let purchaseSearchQuery = '';
+let saleType = 'Cash'; // 'Cash' | 'Credit'
+let saleChannel = 'Walk-in Customer';
+let openSaleDetailId = null;
+let openPurchaseDetailId = null;
+let listSearchQuery = { sales:'', purchase:'' };
 let saleReturnItems = [];
 let purchaseReturnItems = [];
 let openPartyId = null; // party detail panel toggle
@@ -695,7 +817,15 @@ const ICONS = {
   alert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
   grid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
   barChart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>',
-  menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>'
+  menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
+  wallet: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg>',
+  eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+  printer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>',
+  arrowLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+  undo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>',
+  trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>'
 };
 
 function last7DaysSales(){
@@ -708,6 +838,52 @@ function last7DaysSales(){
     days.push({date:ds, total, lbl, isToday: i===0});
   }
   return days;
+}
+
+function last30DaysSalesPurchases(){
+  const days = [];
+  for(let i=29;i>=0;i--){
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const ds = d.toISOString().slice(0,10);
+    const salesTotal = sales().filter(s=>s.payload.date===ds).reduce((sum,s)=>sum+s.payload.total,0);
+    const purchTotal = purchases().filter(p=>p.payload.date===ds).reduce((sum,p)=>sum+p.payload.total,0);
+    const lbl = (d.getMonth()+1).toString().padStart(2,'0') + '-' + d.getDate().toString().padStart(2,'0');
+    days.push({date:ds, salesTotal, purchTotal, lbl, isToday:i===0});
+  }
+  return days;
+}
+
+function salesByPaymentMode(){
+  const map = {};
+  sales().forEach(s=>{
+    const mode = s.payload.paymentMode || 'Cash';
+    if(s.payload.paid>0) map[mode] = (map[mode]||0) + s.payload.paid;
+  });
+  return map;
+}
+
+function todayProfit(){
+  const today = todayStr();
+  let profit = 0;
+  sales().filter(s=>s.payload.date===today).forEach(s=>{
+    (s.payload.items||[]).forEach(it=>{ profit += (it.price-(it.cost||0))*it.qty; });
+  });
+  return profit;
+}
+
+/* Build a CSS conic-gradient donut from [{label,value,color}], returns {gradientCss, segments:[{label,value,pct,color}]} */
+function buildDonut(entries){
+  const total = entries.reduce((s,e)=>s+e.value,0) || 1;
+  let acc = 0;
+  const segments = entries.map(e=>{
+    const pct = Math.round((e.value/total)*100);
+    const start = (acc/total)*360;
+    acc += e.value;
+    const end = (acc/total)*360;
+    return { ...e, pct, start, end };
+  });
+  const gradientCss = segments.map(s=>`${s.color} ${s.start}deg ${s.end}deg`).join(', ');
+  return { gradientCss, segments, total };
 }
 
 /* ============== ANALYTICS ============== */
@@ -916,6 +1092,158 @@ function updateSaleItem(idx, field, value){
   }
   render();
 }
+/* ============== PRODUCT SEARCH (for New Sale / New Purchase) ============== */
+function searchProducts(query){
+  if(!query || !query.trim()) return [];
+  const q = query.trim().toLowerCase();
+  return products().filter(p =>
+    p.payload.name.toLowerCase().includes(q) ||
+    (p.payload.brand||'').toLowerCase().includes(q)
+  ).slice(0,8);
+}
+function updateSaleSearch(val){
+  saleSearchQuery = val;
+  render();
+  const el = document.getElementById('sale-product-search');
+  if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+}
+function updatePurchaseSearch(val){
+  purchaseSearchQuery = val;
+  render();
+  const el = document.getElementById('purchase-product-search');
+  if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+}
+
+function addSaleItemFromSearch(productId){
+  const p = productById(productId);
+  if(!p) return;
+  const existing = saleItems.find(it=>it.productId===productId);
+  if(existing){ existing.qty += 1; }
+  else {
+    saleItems.push({ productId, name:p.payload.name, qty:1, price:p.payload.salePrice });
+    if(!saleTaxPercent && p.payload.taxPercent) saleTaxPercent = p.payload.taxPercent;
+  }
+  saleSearchQuery = '';
+  render();
+}
+function addPurchaseItemFromSearch(productId){
+  const p = productById(productId);
+  if(!p) return;
+  const existing = purchaseItems.find(it=>it.productId===productId);
+  if(existing){ existing.qty += 1; }
+  else {
+    purchaseItems.push({ productId, name:p.payload.name, qty:1, price:p.payload.purchasePrice });
+    if(!purchaseTaxPercent && p.payload.taxPercent) purchaseTaxPercent = p.payload.taxPercent;
+  }
+  purchaseSearchQuery = '';
+  render();
+}
+
+/* ============== DRAFTS (Save as Draft / Resume / Discard) ============== */
+function getDraft(kind){ return records.find(r=>r.type==='draft' && r.payload.kind===kind) || null; }
+
+async function saveSaleDraft(){
+  const customerName = document.getElementById('sale-customer-name').value.trim();
+  const customerPhone = document.getElementById('sale-customer-phone').value.trim();
+  const paid = parseFloat(document.getElementById('sale-paid').value) || 0;
+  const existing = getDraft('sale');
+  const payload = {
+    kind:'sale', customerName, customerPhone, items:saleItems, discount:saleDiscount, taxPct:saleTaxPercent,
+    paid, saleType, saleChannel, savedBy: currentUser.email, savedAt: new Date().toISOString()
+  };
+  if(existing) updateRecordSilent(existing.id, payload);
+  else addRecordSilent('draft', payload);
+  await saveAll();
+  salesView = 'list';
+  saleItems = []; saleDiscount = 0; saleTaxPercent = 0;
+  render();
+}
+function resumeSaleDraft(){
+  const d = getDraft('sale');
+  if(!d) return;
+  saleItems = (d.payload.items||[]).slice();
+  saleDiscount = d.payload.discount||0;
+  saleTaxPercent = d.payload.taxPct||0;
+  saleType = d.payload.saleType || 'Cash';
+  saleChannel = d.payload.saleChannel || 'Walk-in Customer';
+  salesView = 'new';
+  render();
+  document.getElementById('sale-customer-name').value = d.payload.customerName||'';
+  document.getElementById('sale-customer-phone').value = d.payload.customerPhone||'';
+  document.getElementById('sale-paid').value = d.payload.paid||'';
+}
+async function discardSaleDraft(){
+  const d = getDraft('sale');
+  if(!d) return;
+  deleteRecordSilent(d.id);
+  await saveAll();
+  render();
+}
+
+async function savePurchaseDraft(){
+  const supplierName = document.getElementById('purchase-supplier-name').value.trim();
+  const supplierPhone = document.getElementById('purchase-supplier-phone').value.trim();
+  const paid = parseFloat(document.getElementById('purchase-paid').value) || 0;
+  const existing = getDraft('purchase');
+  const payload = {
+    kind:'purchase', supplierName, supplierPhone, items:purchaseItems, discount:purchaseDiscount, taxPct:purchaseTaxPercent,
+    paid, savedBy: currentUser.email, savedAt: new Date().toISOString()
+  };
+  if(existing) updateRecordSilent(existing.id, payload);
+  else addRecordSilent('draft', payload);
+  await saveAll();
+  purchaseView = 'list';
+  purchaseItems = []; purchaseDiscount = 0; purchaseTaxPercent = 0;
+  render();
+}
+function resumePurchaseDraft(){
+  const d = getDraft('purchase');
+  if(!d) return;
+  purchaseItems = (d.payload.items||[]).slice();
+  purchaseDiscount = d.payload.discount||0;
+  purchaseTaxPercent = d.payload.taxPct||0;
+  purchaseView = 'new';
+  render();
+  document.getElementById('purchase-supplier-name').value = d.payload.supplierName||'';
+  document.getElementById('purchase-supplier-phone').value = d.payload.supplierPhone||'';
+  document.getElementById('purchase-paid').value = d.payload.paid||'';
+}
+async function discardPurchaseDraft(){
+  const d = getDraft('purchase');
+  if(!d) return;
+  deleteRecordSilent(d.id);
+  await saveAll();
+  render();
+}
+
+function draftBannerHtml(kind){
+  const d = getDraft(kind);
+  if(!d) return '';
+  const name = kind==='sale' ? (d.payload.customerName||'Walk-in') : (d.payload.supplierName||'Unnamed');
+  const when = new Date(d.payload.savedAt).toLocaleString('en-GB',{day:'numeric',month:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  return `
+  <div class="draft-banner">
+    <div>
+      <span class="dtag">1 draft</span><span class="dtitle">Saved in progress — resume where you left off</span>
+      <div class="dmeta">${escapeHtml(name)} · Saved by ${escapeHtml(d.payload.savedBy||'')} — ${when}</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="ph-btn primary" onclick="${kind==='sale'?'resumeSaleDraft()':'resumePurchaseDraft()'}">Resume</button>
+      <button class="ph-btn" style="color:var(--expense);" onclick="${kind==='sale'?'discardSaleDraft()':'discardPurchaseDraft()'}">Discard</button>
+    </div>
+  </div>`;
+}
+
+function statusBadge(paid, total){
+  const pct = total>0 ? paid/total : 1;
+  if(pct>=1) return '<span class="badge badge-paid">Paid</span>';
+  if(pct>0) return '<span class="badge badge-partial">Partial</span>';
+  return '<span class="badge badge-unpaid">Unpaid</span>';
+}
+function initials(name){
+  return (name||'?').trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+}
+
 function saleCalc(){
   const subtotal = saleItems.reduce((sum,it)=>sum + (it.qty*it.price), 0);
   const discount = saleDiscount || 0;
@@ -972,20 +1300,24 @@ async function submitSale(){
   if(editingSaleId){
     const oldRecord = records.find(r=>r.id===editingSaleId);
     const invoiceNo = oldRecord ? oldRecord.payload.invoiceNo : nextInvoiceNo('sale');
-    updateRecordSilent(editingSaleId, { date:todayStr(), customerId, items, subtotal, discount, taxPct, tax, total, paid, paymentMode, invoiceNo });
+    updateRecordSilent(editingSaleId, { date:todayStr(), customerId, items, subtotal, discount, taxPct, tax, total, paid, paymentMode, invoiceNo, saleType, saleChannel });
     editingSaleId = null;
   } else {
-    addRecordSilent('sale', { date:todayStr(), customerId, items, subtotal, discount, taxPct, tax, total, paid, paymentMode, invoiceNo: nextInvoiceNo('sale') });
+    addRecordSilent('sale', { date:todayStr(), customerId, items, subtotal, discount, taxPct, tax, total, paid, paymentMode, invoiceNo: nextInvoiceNo('sale'), saleType, saleChannel });
   }
   items.forEach(it=>{
     const p = productById(it.productId);
     updateRecordSilent(it.productId, {...p.payload, qty:p.payload.qty - it.qty});
   });
+  const draft = getDraft('sale');
+  if(draft) deleteRecordSilent(draft.id);
   await saveAll();
   saleItems = [];
   saleDiscount = 0;
   saleTaxPercent = 0;
+  saleSearchQuery = '';
   formOpen.sale = false;
+  salesView = 'list';
   render();
 }
 
@@ -993,9 +1325,12 @@ function editSale(id){
   const s = sales().find(x=>x.id===id);
   if(!s) return;
   editingSaleId = id;
-  saleItems = s.payload.items.map(it=>({ productId:it.productId, qty:it.qty, price:it.price }));
+  saleItems = s.payload.items.map(it=>({ productId:it.productId, name:it.name, qty:it.qty, price:it.price }));
   saleDiscount = s.payload.discount || 0;
   saleTaxPercent = s.payload.taxPct || 0;
+  saleType = s.payload.paid >= s.payload.total ? 'Cash' : 'Credit';
+  saleChannel = s.payload.saleChannel || 'Walk-in Customer';
+  salesView = 'new';
   formOpen.sale = true;
   render();
   const cust = customers().find(c=>c.id===s.payload.customerId);
@@ -1131,11 +1466,15 @@ async function submitPurchase(){
     const p = productById(it.productId);
     updateRecordSilent(it.productId, {...p.payload, qty:p.payload.qty + it.qty, purchasePrice: it.price});
   });
+  const draft = getDraft('purchase');
+  if(draft) deleteRecordSilent(draft.id);
   await saveAll();
   purchaseItems = [];
   purchaseDiscount = 0;
   purchaseTaxPercent = 0;
+  purchaseSearchQuery = '';
   formOpen.purchase = false;
+  purchaseView = 'list';
   render();
 }
 
@@ -1143,9 +1482,10 @@ function editPurchase(id){
   const p = purchases().find(x=>x.id===id);
   if(!p) return;
   editingPurchaseId = id;
-  purchaseItems = p.payload.items.map(it=>({ productId:it.productId, qty:it.qty, price:it.price }));
+  purchaseItems = p.payload.items.map(it=>({ productId:it.productId, name:it.name, qty:it.qty, price:it.price }));
   purchaseDiscount = p.payload.discount || 0;
   purchaseTaxPercent = p.payload.taxPct || 0;
+  purchaseView = 'new';
   formOpen.purchase = true;
   render();
   const sup = suppliers().find(s=>s.id===p.payload.supplierId);
@@ -1540,57 +1880,121 @@ function render(){
   `).join('');
 
   if(activeTab==='dashboard'){
-    const trend = last7DaysSales();
-    const maxTrend = Math.max(1, ...trend.map(d=>d.total));
-    const netToday = stats.todaySales - stats.todayPurchases;
+    const trend30 = last30DaysSalesPurchases();
+    const maxTrend30 = Math.max(1, ...trend30.map(d=>Math.max(d.salesTotal,d.purchTotal)));
+    const totalProductsCount = products().length;
+    const totalCustomersCount = customers().length;
+    const todayInvoicesCount = sales().filter(s=>s.payload.date===todayStr()).length;
+    const tProfit = todayProfit();
 
-    const activity = [
-      ...sales().map(s=>({...s, kind:'sale'})),
-      ...purchases().map(p=>({...p, kind:'purchase'}))
-    ].sort((a,b)=> (a.payload.date < b.payload.date ? 1 : (a.payload.date > b.payload.date ? -1 : 0)))
-     .slice(0,8);
+    // Sales by Type = category breakdown
+    const catMap = salesByCategory();
+    const catColors = ['#F0A93E','#2E63EB','#1FA766','#8B5CF6','#E1483C'];
+    const catEntries = Object.entries(catMap).sort((a,b)=>b[1]-a[1]).map(([label,value],i)=>({label, value, color:catColors[i%catColors.length]}));
+    const catDonut = catEntries.length ? buildDonut(catEntries) : null;
+
+    // Sales by Channel = payment mode breakdown
+    const modeMap = salesByPaymentMode();
+    const modeColors = { Cash:'#2E63EB', Bank:'#1FA766', Wallet:'#F0A93E' };
+    const modeEntries = Object.entries(modeMap).sort((a,b)=>b[1]-a[1]).map(([label,value])=>({label, value, color:modeColors[label]||'#8B5CF6'}));
+    const modeDonut = modeEntries.length ? buildDonut(modeEntries) : null;
+
+    // Recent activity = payments, newest first
+    const recentPayments = payments().slice().reverse().slice(0,6);
 
     body = `
-    <div class="hero-card">
-      <div class="hero-top">
-        <div>
-          <div class="hero-label">Aaj ka Net (Sale − Purchase)</div>
-          <div class="hero-value" style="color:${netToday>=0?'var(--income)':'var(--expense)'}">Rs ${fmt(Math.abs(netToday))}</div>
-          <div class="hero-sub">Sale Rs ${fmt(stats.todaySales)} · Purchase Rs ${fmt(stats.todayPurchases)}</div>
+    <div class="dash-top-grid">
+      <div class="chart-card">
+        <div class="chart-card-head">
+          <h3>Sales &amp; Purchases</h3>
+          <span class="sub">Last 30 days</span>
         </div>
-        <span class="hero-pill ${netToday>=0?'up':'down'}">${netToday>=0?'Profit':'Loss'}</span>
+        <div class="chart-legend">
+          <span><span class="dot sales"></span> Sales</span>
+          <span><span class="dot purch"></span> Purchases</span>
+        </div>
+        <div class="bar30-wrap">
+          ${trend30.map(d=>`
+            <div class="bar30-col" title="${d.date}">
+              <div class="bar30-bars">
+                <div class="bar30-bar sales" style="height:${Math.max(1,Math.round((d.salesTotal/maxTrend30)*150))}px"></div>
+                <div class="bar30-bar purch" style="height:${Math.max(1,Math.round((d.purchTotal/maxTrend30)*150))}px"></div>
+              </div>
+              <div class="bar30-lbl">${d.lbl}</div>
+            </div>`).join('')}
+        </div>
       </div>
-      <div class="hero-chart">
-        ${trend.map(d=>`
-          <div class="hero-bar-wrap">
-            <div class="hero-bar ${d.isToday?'today':''}" style="height:${Math.max(6, Math.round((d.total/maxTrend)*52))}px" title="Rs ${fmt(d.total)}"></div>
-            <div class="hero-bar-lbl">${d.lbl}</div>
-          </div>`).join('')}
+      <div class="dash-stat-grid">
+        <div class="dash-stat-card">
+          <div class="icon-badge blue">${ICONS.box}</div>
+          <div class="k">Total Products</div>
+          <div class="v">${totalProductsCount}</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="icon-badge gold">${ICONS.users}</div>
+          <div class="k">Total Customers</div>
+          <div class="v">${totalCustomersCount}</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="icon-badge blue">${ICONS.cart}</div>
+          <div class="k">Today's Invoices</div>
+          <div class="v">${todayInvoicesCount}</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="icon-badge gold">${ICONS.dollar}</div>
+          <div class="k">Today's Sales</div>
+          <div class="v">Rs ${fmt(stats.todaySales)}</div>
+          <div class="sub">Profit: Rs ${fmt(tProfit)}</div>
+        </div>
       </div>
     </div>
 
-    <div class="stat-grid">
-      <div class="stat-card"><div class="icon-badge blue">${ICONS.dollar}</div><div class="k">Total Profit</div><div class="v blue">Rs ${fmt(stats.profit)}</div></div>
-      <div class="stat-card"><div class="icon-badge gold">${ICONS.box}</div><div class="k">Inventory Value</div><div class="v gold">Rs ${fmt(stats.inventoryValue)}</div></div>
-      <div class="stat-card"><div class="icon-badge in">${ICONS.users}</div><div class="k">Customers se Lena</div><div class="v in">Rs ${fmt(stats.totalReceivable)}</div></div>
-      <div class="stat-card"><div class="icon-badge out">${ICONS.truck}</div><div class="k">Suppliers ko Dena</div><div class="v out">Rs ${fmt(stats.totalPayable)}</div></div>
-      ${stats.lowStockCount>0 ? `<div class="stat-card wide"><div class="icon-badge out">${ICONS.alert}</div><div class="k">Low Stock Warning</div><div class="v out">${stats.lowStockCount} products 2 ya kam pcs par hain</div></div>` : ''}
-    </div>
-
-    <div class="section-title">Recent Activity</div>
-    ${activity.length ? activity.map(a=>{
-      const isSale = a.kind==='sale';
-      const party = isSale ? partyName('customer', a.payload.customerId) : partyName('supplier', a.payload.supplierId);
-      return `
-      <div class="activity-row">
-        <div class="activity-icon ${a.kind}">${isSale?ICONS.trendUp:ICONS.cart}</div>
-        <div class="activity-body">
-          <div class="activity-title">${isSale?'Sale':'Purchase'} — ${escapeHtml(party)}</div>
-          <div class="activity-sub">${a.payload.date} · ${a.payload.items.length} item(s)</div>
+    <div class="dash-bottom-grid">
+      <div class="chart-card">
+        <div class="chart-card-head"><h3>Sales by Type</h3><span class="sub">Last 30 days</span></div>
+        ${catDonut ? `
+        <div class="donut-wrap" style="background:conic-gradient(${catDonut.gradientCss});">
+          <div class="donut-hole"></div>
+          ${catDonut.segments[0] ? `<div class="donut-badge" style="top:6px;right:6px;">${catDonut.segments[0].pct}%</div>` : ''}
         </div>
-        <div class="activity-amt" style="color:${isSale?'var(--blue)':'var(--gold)'}">Rs ${fmt(a.payload.total)}</div>
-      </div>`;
-    }).join('') : '<div class="empty"><span class="big">Koi activity nahi</span>Sales ya Purchase tab se pehli invoice banayein</div>'}
+        <div class="donut-legend">
+          ${catDonut.segments.map(s=>`
+            <div class="donut-legend-row">
+              <span class="lbl"><span class="dot" style="background:${s.color}"></span>${escapeHtml(s.label)}</span>
+              <span class="amt">Rs ${fmt(s.value)}</span>
+            </div>`).join('')}
+        </div>` : `<div class="empty-donut">Abhi koi sale data nahi</div>`}
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-head"><h3>Sales by Channel</h3><span class="sub">Payment mode</span></div>
+        ${modeDonut ? `
+        <div class="donut-wrap" style="background:conic-gradient(${modeDonut.gradientCss});">
+          <div class="donut-hole"></div>
+        </div>
+        <div class="donut-legend">
+          ${modeDonut.segments.map(s=>`
+            <div class="donut-legend-row">
+              <span class="lbl"><span class="dot" style="background:${s.color}"></span>${escapeHtml(s.label)}</span>
+              <span class="amt">Rs ${fmt(s.value)}</span>
+            </div>`).join('')}
+        </div>` : `<div class="empty-donut">Abhi koi payment data nahi</div>`}
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-head"><h3>Recent Activity</h3></div>
+        ${recentPayments.length ? recentPayments.map(pm=>{
+          const party = pm.payload.partyType==='customer' ? partyName('customer', pm.payload.partyId) : partyName('supplier', pm.payload.partyId);
+          return `
+          <div class="ract-row">
+            <div class="ract-icon">${ICONS.wallet}</div>
+            <div class="ract-body">
+              <div class="ract-title">${escapeHtml(party)}</div>
+              <div class="ract-sub">Payment against outstanding balance</div>
+            </div>
+            <div class="ract-amt">+Rs ${fmt(pm.payload.amount)}</div>
+          </div>`;
+        }).join('') : `<div class="empty" style="padding:16px;">Koi recent payment nahi</div>`}
+      </div>
+    </div>
     `;
   } else if(activeTab==='inventory'){
     body = `
@@ -1629,135 +2033,297 @@ function render(){
     ${filteredProducts.length ? filteredProducts.map(productRow).join('') : `<div class="empty"><span class="big">Koi product nahi</span>Upar se apna pehla product add karein</div>`}
     `;
   } else if(activeTab==='sales'){
-    body = `
-    <div style="display:flex;gap:8px;">
-      <button class="fab-add" style="flex:1" onclick="toggleForm('sale')">${formOpen.sale?'− Band karein':'+ Nayi Invoice'}</button>
-      <button class="fab-add" style="flex:1" onclick="toggleForm('saleReturn')">${formOpen.saleReturn?'− Band karein':'+ Return / Credit Note'}</button>
-    </div>
-    <div class="add-form ${formOpen.sale?'open':''}">
-      <div class="row">
-        <input id="sale-customer-name" type="text" placeholder="Customer Name">
-        <input id="sale-customer-phone" type="text" placeholder="Phone (optional)">
+    if(salesView==='new'){
+      const saleMatches = searchProducts(saleSearchQuery);
+      body = `
+      <div class="page-header-row">
+        <h2>${editingSaleId?'Edit Sale':'New Sale'}</h2>
+        <button class="ph-btn" onclick="cancelSaleForm(); salesView='list'; render();">${ICONS.arrowLeft} Back to Sales</button>
       </div>
-      ${saleItems.map((it,idx)=>`
-        <div class="item-row">
-          <select onchange="updateSaleItem(${idx},'productId',this.value)">${productOptionsHtml(it.productId)}</select>
-          <input type="number" placeholder="Qty" value="${it.qty}" onchange="updateSaleItem(${idx},'qty',this.value)">
-          <input type="number" placeholder="Price" value="${it.price||''}" onchange="updateSaleItem(${idx},'price',this.value)">
-          <button class="rm" onclick="removeSaleItemRow(${idx})">✕</button>
-        </div>`).join('')}
-      <button class="add-item-btn" onclick="addSaleItemRow()">+ Item add karein</button>
-      <div class="row">
-        <input id="sale-discount" type="number" placeholder="Discount (Rs)" value="${saleDiscount||''}" onchange="updateSaleCalcInputs()">
-        <input id="sale-tax" type="number" placeholder="Tax %" value="${saleTaxPercent||''}" onchange="updateSaleCalcInputs()">
+      <div class="form-page-card">
+        <div class="form-page-grid cols3">
+          <div class="fp-field"><label>Customer Phone</label><input id="sale-customer-phone" type="text" placeholder="03xx-xxxxxxx (optional)"></div>
+          <div class="fp-field"><label>Customer Name</label><input id="sale-customer-name" type="text" placeholder="Leave blank for NA (walk-in)"></div>
+          <div class="fp-field"><label>Invoice #</label><input type="text" value="INV-${editingSaleId ? (records.find(r=>r.id===editingSaleId)?.payload.invoiceNo||'') : nextInvoiceNo('sale')}" disabled></div>
+        </div>
+        <div class="form-page-grid cols2" style="margin-top:14px;">
+          <div class="fp-field"><label>Sale Type</label>
+            <div class="seg-toggle">
+              <div class="seg-toggle-btn ${saleType==='Cash'?'active':''}" onclick="saleType='Cash'; render();">Cash</div>
+              <div class="seg-toggle-btn ${saleType==='Credit'?'active':''}" onclick="saleType='Credit'; render();">Credit</div>
+            </div>
+          </div>
+          <div class="fp-field"><label>Sale Channel</label>
+            <select onchange="saleChannel=this.value">
+              <option value="" ${!saleChannel?'selected':''}>— None —</option>
+              <option value="Online Sale" ${saleChannel==='Online Sale'?'selected':''}>Online Sale</option>
+              <option value="Walk-in Customer" ${saleChannel==='Walk-in Customer'?'selected':''}>Walk-in Customer</option>
+              <option value="Website Sale" ${saleChannel==='Website Sale'?'selected':''}>Website Sale</option>
+            </select>
+          </div>
+        </div>
       </div>
-      <div class="calc-breakdown">
-        <div><span>Subtotal</span><span>Rs ${fmt(saleCalc().subtotal)}</span></div>
-        ${saleCalc().discount>0?`<div><span>Discount</span><span>− Rs ${fmt(saleCalc().discount)}</span></div>`:''}
-        ${saleCalc().taxPct>0?`<div><span>Tax (${saleCalc().taxPct}%)</span><span>+ Rs ${fmt(saleCalc().tax)}</span></div>`:''}
+      <div class="form-page-card">
+        <h3 style="margin:0 0 12px;font-size:15px;">Products</h3>
+        <div class="product-search-wrap">
+          <input id="sale-product-search" type="text" placeholder="Search products by name, SKU, or barcode..." value="${escapeHtml(saleSearchQuery)}" oninput="updateSaleSearch(this.value)">
+          ${saleSearchQuery.trim() ? `<div class="product-search-results">${
+            saleMatches.length ? saleMatches.map(p=>`
+              <div class="psr-item" onclick="addSaleItemFromSearch('${p.id}')">
+                <span class="nm">${escapeHtml(p.payload.name)}</span>
+                <span class="pr">Rs ${fmt(p.payload.salePrice)} · Stock ${p.payload.qty}</span>
+              </div>`).join('') : `<div class="psr-item">Koi product nahi mila</div>`
+          }</div>` : ''}
+        </div>
+        ${saleItems.length ? saleItems.map((it,idx)=>`
+          <div class="cart-row">
+            <div class="cart-name">${escapeHtml(it.name)}</div>
+            <input type="number" value="${it.qty}" onchange="updateSaleItem(${idx},'qty',this.value)">
+            <input type="number" value="${it.price}" onchange="updateSaleItem(${idx},'price',this.value)">
+            <div class="cart-linetotal">Rs ${fmt(it.qty*it.price)}</div>
+            <button class="rm" onclick="removeSaleItemRow(${idx})">✕</button>
+          </div>`).join('') : `<div class="cart-empty">No products added yet.</div>`}
       </div>
-      <div class="invoice-total"><span class="lbl">Grand Total</span><span class="val">Rs ${fmt(saleCalc().total)}</span></div>
-      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-dim);cursor:pointer;margin-bottom:8px;">
-        <input type="checkbox" id="sale-full-credit" onchange="toggleFullCredit('sale')"> Poora Credit (Udhaar) — abhi kuch paid nahi
-      </label>
-      <div class="row">
-        <input id="sale-paid" type="number" placeholder="Kitna paid hua (Rs)">
-        <select id="sale-payment-mode">
-          <option value="Cash">Cash</option>
-          <option value="Bank">Bank</option>
-          <option value="Wallet">Wallet (JazzCash/EasyPaisa)</option>
-        </select>
+      <div class="form-page-card">
+        <div class="form-page-grid cols3">
+          <div class="fp-field"><label>Discount (Rs)</label><input id="sale-discount" type="number" value="${saleDiscount||''}" onchange="updateSaleCalcInputs()"></div>
+          <div class="fp-field"><label>Tax %</label><input id="sale-tax" type="number" value="${saleTaxPercent||''}" onchange="updateSaleCalcInputs()"></div>
+          <div class="fp-field"><label>Paid Amount</label><input id="sale-paid" type="number" placeholder="0"></div>
+        </div>
+        <div class="fp-field" style="margin-top:14px;max-width:240px;"><label>Payment Mode</label>
+          <select id="sale-payment-mode">
+            <option value="Cash">Cash</option>
+            <option value="Bank">Bank</option>
+            <option value="Wallet">Wallet (JazzCash/EasyPaisa)</option>
+          </select>
+        </div>
+        <div class="totals-footer">
+          <div>
+            <div class="subtot">Subtotal: Rs ${fmt(saleCalc().subtotal)}</div>
+            ${saleCalc().discount>0?`<div class="subtot">Discount: − Rs ${fmt(saleCalc().discount)}</div>`:''}
+            ${saleCalc().taxPct>0?`<div class="subtot">Tax (${saleCalc().taxPct}%): + Rs ${fmt(saleCalc().tax)}</div>`:''}
+            <div class="grandtot">Total: Rs ${fmt(saleCalc().total)}</div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-ghost" onclick="saveSaleDraft()">Save as Draft</button>
+            <button class="btn btn-primary" onclick="submitSale()">${editingSaleId?'Update Sale':'Complete Sale'}</button>
+          </div>
+        </div>
       </div>
-      <div class="actions">
-        <button class="btn btn-primary" onclick="submitSale()">${editingSaleId?"Invoice Update karein":"Invoice Save karein"}</button>
-        <button class="btn btn-ghost" onclick="toggleForm('sale')">Cancel</button>
+      `;
+    } else if(formOpen.saleReturn){
+      body = `
+      <div class="page-header-row">
+        <h2>Sale Return / Credit Note</h2>
+        <button class="ph-btn" onclick="toggleForm('saleReturn')">${ICONS.arrowLeft} Back to Sales</button>
       </div>
-    </div>
-    <div class="add-form ${formOpen.saleReturn?'open':''}">
-      <div class="row"><select id="sale-return-customer">${customerOptionsHtml('')}</select></div>
-      ${saleReturnItems.map((it,idx)=>`
-        <div class="item-row">
-          <select onchange="updateSaleReturnItem(${idx},'productId',this.value)">${productOptionsHtml(it.productId)}</select>
-          <input type="number" placeholder="Qty" value="${it.qty}" onchange="updateSaleReturnItem(${idx},'qty',this.value)">
-          <input type="number" placeholder="Price" value="${it.price||''}" onchange="updateSaleReturnItem(${idx},'price',this.value)">
-          <button class="rm" onclick="removeSaleReturnItemRow(${idx})">✕</button>
-        </div>`).join('')}
-      <button class="add-item-btn" onclick="addSaleReturnItemRow()">+ Item add karein</button>
-      <div class="invoice-total"><span class="lbl">Return Total</span><span class="val" style="color:var(--expense)">Rs ${fmt(saleReturnItems.reduce((s,it)=>s+it.qty*it.price,0))}</span></div>
-      <p style="font-size:11px;color:var(--ink-dim);margin:0 0 10px;">Stock wapas add hoga aur customer ka udhaar isi amount se kam ho jayega.</p>
-      <div class="actions">
-        <button class="btn btn-primary" style="background:var(--expense)" onclick="submitSaleReturn()">Return Save karein</button>
-        <button class="btn btn-ghost" onclick="toggleForm('saleReturn')">Cancel</button>
+      <div class="form-page-card">
+        <div class="row"><select id="sale-return-customer">${customerOptionsHtml('')}</select></div>
+        ${saleReturnItems.map((it,idx)=>`
+          <div class="item-row">
+            <select onchange="updateSaleReturnItem(${idx},'productId',this.value)">${productOptionsHtml(it.productId)}</select>
+            <input type="number" placeholder="Qty" value="${it.qty}" onchange="updateSaleReturnItem(${idx},'qty',this.value)">
+            <input type="number" placeholder="Price" value="${it.price||''}" onchange="updateSaleReturnItem(${idx},'price',this.value)">
+            <button class="rm" onclick="removeSaleReturnItemRow(${idx})">✕</button>
+          </div>`).join('')}
+        <button class="add-item-btn" onclick="addSaleReturnItemRow()">+ Item add karein</button>
+        <div class="invoice-total"><span class="lbl">Return Total</span><span class="val" style="color:var(--expense)">Rs ${fmt(saleReturnItems.reduce((s,it)=>s+it.qty*it.price,0))}</span></div>
+        <p style="font-size:11px;color:var(--ink-dim);margin:0 0 10px;">Stock wapas add hoga aur customer ka udhaar isi amount se kam ho jayega.</p>
+        <div class="actions">
+          <button class="btn btn-primary" style="background:var(--expense)" onclick="submitSaleReturn()">Return Save karein</button>
+          <button class="btn btn-ghost" onclick="toggleForm('saleReturn')">Cancel</button>
+        </div>
       </div>
-    </div>
-    ${sales().length ? sales().slice().reverse().map(saleRow).join('') : `<div class="empty"><span class="big">Koi sale nahi</span>Upar se pehli invoice banayein</div>`}
-    ${saleReturns().length ? `<div class="section-title">Sale Returns</div>` + saleReturns().slice().reverse().map(r=>returnRow('customer', r)).join('') : ''}
-    `;
+      `;
+    } else {
+      body = `
+      <div class="page-header-row">
+        <h2>Sales</h2>
+        <div class="page-header-actions">
+          <button class="ph-btn" onclick="toggleForm('saleReturn')">${ICONS.undo} Returns</button>
+          <button class="ph-btn primary" onclick="salesView='new'; render();">${ICONS.plus} New Sale</button>
+        </div>
+      </div>
+      ${draftBannerHtml('sale')}
+      <div class="list-toolbar">
+        <input type="text" placeholder="Search invoice, customer" value="${escapeHtml(listSearchQuery.sales)}" onchange="listSearchQuery.sales=this.value; render();">
+      </div>
+      ${(()=>{
+        const list = sales().slice().reverse();
+        const q = listSearchQuery.sales.trim().toLowerCase();
+        const filtered = q ? list.filter(s=>{
+          const cust = saleCustomerDisplay(s).toLowerCase();
+          return ('inv-'+s.payload.invoiceNo).includes(q) || cust.includes(q);
+        }) : list;
+        if(!filtered.length) return `<div class="empty"><span class="big">Koi sale nahi</span>"+ New Sale" se pehli invoice banayein</div>`;
+        const rows = filtered.map((s,idx)=>{
+          const cust = saleCustomerDisplay(s);
+          const isOpen = openSaleDetailId===s.id;
+          const detailRow = isOpen ? `<tr class="detail-subrow"><td colspan="8">
+            ${s.payload.items.map(it=>`<div style="display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0;"><span>${escapeHtml(it.name)} × ${it.qty}</span><span>Rs ${fmt(it.qty*it.price)}</span></div>`).join('')}
+          </td></tr>` : '';
+          return `
+          <tr>
+            <td>${idx+1}</td>
+            <td><span class="dt-invoice-link" onclick="openPrintPicker('sale','${s.id}')">INV-${s.payload.invoiceNo||'—'}</span></td>
+            <td><div class="dt-customer"><span class="dt-avatar">${initials(cust)}</span>${escapeHtml(cust)}</div></td>
+            <td>${s.payload.date}</td>
+            <td>${s.payload.saleType||(s.payload.paid>=s.payload.total?'Cash':'Credit')}<div class="dt-sub">${escapeHtml(s.payload.saleChannel||'Walk-in Customer')}</div></td>
+            <td>Rs ${fmt(s.payload.total)}</td>
+            <td>${statusBadge(s.payload.paid, s.payload.total)}</td>
+            <td>
+              <div class="dt-actions">
+                <button class="dt-icon-btn" onclick="openSaleDetailId = openSaleDetailId==='${s.id}'?null:'${s.id}'; render()" title="View">${ICONS.eye}</button>
+                <button class="dt-icon-btn" onclick="openPrintPicker('sale','${s.id}')" title="Print">${ICONS.printer}</button>
+                ${isAdmin() ? `<button class="dt-icon-btn" onclick="editSale('${s.id}')" title="Edit">${ICONS.edit}</button>` : ''}
+                ${isAdmin() ? `<button class="dt-icon-btn" onclick="deleteRecord('${s.id}')" title="Delete">${ICONS.trash}</button>` : ''}
+              </div>
+            </td>
+          </tr>${detailRow}`;
+        }).join('');
+        return `<div class="data-table-wrap"><table class="data-table"><thead><tr><th>S.L</th><th>Invoice</th><th>Customer</th><th>Date</th><th>Type/Channel</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+      })()}
+      ${saleReturns().length ? `<div class="section-title">Sale Returns</div>` + saleReturns().slice().reverse().map(r=>returnRow('customer', r)).join('') : ''}
+      `;
+    }
   } else if(activeTab==='purchase'){
-    body = `
-    <div style="display:flex;gap:8px;">
-      <button class="fab-add" style="flex:1" onclick="toggleForm('purchase')">${formOpen.purchase?'− Band karein':'+ Nayi Invoice'}</button>
-      <button class="fab-add" style="flex:1" onclick="toggleForm('purchaseReturn')">${formOpen.purchaseReturn?'− Band karein':'+ Return / Credit Note'}</button>
-    </div>
-    <div class="add-form ${formOpen.purchase?'open':''}">
-      <div class="row">
-        <input id="purchase-supplier-name" type="text" placeholder="Supplier Name">
-        <input id="purchase-supplier-phone" type="text" placeholder="Phone (optional)">
+    if(purchaseView==='new'){
+      const purchMatches = searchProducts(purchaseSearchQuery);
+      body = `
+      <div class="page-header-row">
+        <h2>${editingPurchaseId?'Edit Purchase':'New Purchase'}</h2>
+        <button class="ph-btn" onclick="cancelPurchaseForm(); purchaseView='list'; render();">${ICONS.arrowLeft} Back to Purchases</button>
       </div>
-      ${purchaseItems.map((it,idx)=>`
-        <div class="item-row">
-          <select onchange="updatePurchaseItem(${idx},'productId',this.value)">${productOptionsHtml(it.productId)}</select>
-          <input type="number" placeholder="Qty" value="${it.qty}" onchange="updatePurchaseItem(${idx},'qty',this.value)">
-          <input type="number" placeholder="Cost" value="${it.price||''}" onchange="updatePurchaseItem(${idx},'price',this.value)">
-          <button class="rm" onclick="removePurchaseItemRow(${idx})">✕</button>
-        </div>`).join('')}
-      <button class="add-item-btn" onclick="addPurchaseItemRow()">+ Item add karein</button>
-      <div class="row">
-        <input id="purchase-discount" type="number" placeholder="Discount (Rs)" value="${purchaseDiscount||''}" onchange="updatePurchaseCalcInputs()">
-        <input id="purchase-tax" type="number" placeholder="Tax %" value="${purchaseTaxPercent||''}" onchange="updatePurchaseCalcInputs()">
+      <div class="form-page-card">
+        <div class="form-page-grid cols3">
+          <div class="fp-field"><label>Supplier Phone</label><input id="purchase-supplier-phone" type="text" placeholder="03xx-xxxxxxx (optional)"></div>
+          <div class="fp-field"><label>Supplier Name</label><input id="purchase-supplier-name" type="text" placeholder="Supplier name"></div>
+          <div class="fp-field"><label>Invoice #</label><input type="text" value="PUR-${editingPurchaseId ? (records.find(r=>r.id===editingPurchaseId)?.payload.invoiceNo||'') : nextInvoiceNo('purchase')}" disabled></div>
+        </div>
       </div>
-      <div class="calc-breakdown">
-        <div><span>Subtotal</span><span>Rs ${fmt(purchaseCalc().subtotal)}</span></div>
-        ${purchaseCalc().discount>0?`<div><span>Discount</span><span>− Rs ${fmt(purchaseCalc().discount)}</span></div>`:''}
-        ${purchaseCalc().taxPct>0?`<div><span>Tax (${purchaseCalc().taxPct}%)</span><span>+ Rs ${fmt(purchaseCalc().tax)}</span></div>`:''}
+      <div class="form-page-card">
+        <h3 style="margin:0 0 12px;font-size:15px;">Products</h3>
+        <div class="product-search-wrap">
+          <input id="purchase-product-search" type="text" placeholder="Search products by name, SKU, or barcode..." value="${escapeHtml(purchaseSearchQuery)}" oninput="updatePurchaseSearch(this.value)">
+          ${purchaseSearchQuery.trim() ? `<div class="product-search-results">${
+            purchMatches.length ? purchMatches.map(p=>`
+              <div class="psr-item" onclick="addPurchaseItemFromSearch('${p.id}')">
+                <span class="nm">${escapeHtml(p.payload.name)}</span>
+                <span class="pr">Cost Rs ${fmt(p.payload.purchasePrice)} · Stock ${p.payload.qty}</span>
+              </div>`).join('') : `<div class="psr-item">Koi product nahi mila</div>`
+          }</div>` : ''}
+        </div>
+        ${purchaseItems.length ? purchaseItems.map((it,idx)=>`
+          <div class="cart-row">
+            <div class="cart-name">${escapeHtml(it.name)}</div>
+            <input type="number" value="${it.qty}" onchange="updatePurchaseItem(${idx},'qty',this.value)">
+            <input type="number" value="${it.price}" onchange="updatePurchaseItem(${idx},'price',this.value)">
+            <div class="cart-linetotal">Rs ${fmt(it.qty*it.price)}</div>
+            <button class="rm" onclick="removePurchaseItemRow(${idx})">✕</button>
+          </div>`).join('') : `<div class="cart-empty">No products added yet.</div>`}
       </div>
-      <div class="invoice-total"><span class="lbl">Grand Total</span><span class="val" style="color:var(--gold)">Rs ${fmt(purchaseCalc().total)}</span></div>
-      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-dim);cursor:pointer;margin-bottom:8px;">
-        <input type="checkbox" id="purchase-full-credit" onchange="toggleFullCredit('purchase')"> Poora Credit (Udhaar) — abhi kuch paid nahi
-      </label>
-      <div class="row">
-        <input id="purchase-paid" type="number" placeholder="Kitna paid hua (Rs)">
-        <select id="purchase-payment-mode">
-          <option value="Cash">Cash</option>
-          <option value="Bank">Bank</option>
-          <option value="Wallet">Wallet (JazzCash/EasyPaisa)</option>
-        </select>
+      <div class="form-page-card">
+        <div class="form-page-grid cols3">
+          <div class="fp-field"><label>Discount (Rs)</label><input id="purchase-discount" type="number" value="${purchaseDiscount||''}" onchange="updatePurchaseCalcInputs()"></div>
+          <div class="fp-field"><label>Tax %</label><input id="purchase-tax" type="number" value="${purchaseTaxPercent||''}" onchange="updatePurchaseCalcInputs()"></div>
+          <div class="fp-field"><label>Paid Amount</label><input id="purchase-paid" type="number" placeholder="0"></div>
+        </div>
+        <div class="fp-field" style="margin-top:14px;max-width:240px;"><label>Payment Mode</label>
+          <select id="purchase-payment-mode">
+            <option value="Cash">Cash</option>
+            <option value="Bank">Bank</option>
+            <option value="Wallet">Wallet (JazzCash/EasyPaisa)</option>
+          </select>
+        </div>
+        <div class="totals-footer">
+          <div>
+            <div class="subtot">Subtotal: Rs ${fmt(purchaseCalc().subtotal)}</div>
+            ${purchaseCalc().discount>0?`<div class="subtot">Discount: − Rs ${fmt(purchaseCalc().discount)}</div>`:''}
+            ${purchaseCalc().taxPct>0?`<div class="subtot">Tax (${purchaseCalc().taxPct}%): + Rs ${fmt(purchaseCalc().tax)}</div>`:''}
+            <div class="grandtot">Total: Rs ${fmt(purchaseCalc().total)}</div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-ghost" onclick="savePurchaseDraft()">Save as Draft</button>
+            <button class="btn btn-gold" onclick="submitPurchase()">${editingPurchaseId?'Update Purchase':'Complete Purchase'}</button>
+          </div>
+        </div>
       </div>
-      <div class="actions">
-        <button class="btn btn-gold" onclick="submitPurchase()">${editingPurchaseId?"Invoice Update karein":"Invoice Save karein"}</button>
-        <button class="btn btn-ghost" onclick="toggleForm('purchase')">Cancel</button>
+      `;
+    } else if(formOpen.purchaseReturn){
+      body = `
+      <div class="page-header-row">
+        <h2>Purchase Return / Credit Note</h2>
+        <button class="ph-btn" onclick="toggleForm('purchaseReturn')">${ICONS.arrowLeft} Back to Purchases</button>
       </div>
-    </div>
-    <div class="add-form ${formOpen.purchaseReturn?'open':''}">
-      <div class="row"><select id="purchase-return-supplier">${supplierOptionsHtml('')}</select></div>
-      ${purchaseReturnItems.map((it,idx)=>`
-        <div class="item-row">
-          <select onchange="updatePurchaseReturnItem(${idx},'productId',this.value)">${productOptionsHtml(it.productId)}</select>
-          <input type="number" placeholder="Qty" value="${it.qty}" onchange="updatePurchaseReturnItem(${idx},'qty',this.value)">
-          <input type="number" placeholder="Price" value="${it.price||''}" onchange="updatePurchaseReturnItem(${idx},'price',this.value)">
-          <button class="rm" onclick="removePurchaseReturnItemRow(${idx})">✕</button>
-        </div>`).join('')}
-      <button class="add-item-btn" onclick="addPurchaseReturnItemRow()">+ Item add karein</button>
-      <div class="invoice-total"><span class="lbl">Return Total</span><span class="val" style="color:var(--expense)">Rs ${fmt(purchaseReturnItems.reduce((s,it)=>s+it.qty*it.price,0))}</span></div>
-      <p style="font-size:11px;color:var(--ink-dim);margin:0 0 10px;">Stock kam hoga aur supplier ko dena isi amount se kam ho jayega.</p>
-      <div class="actions">
-        <button class="btn btn-gold" style="background:var(--expense)" onclick="submitPurchaseReturn()">Return Save karein</button>
-        <button class="btn btn-ghost" onclick="toggleForm('purchaseReturn')">Cancel</button>
+      <div class="form-page-card">
+        <div class="row"><select id="purchase-return-supplier">${supplierOptionsHtml('')}</select></div>
+        ${purchaseReturnItems.map((it,idx)=>`
+          <div class="item-row">
+            <select onchange="updatePurchaseReturnItem(${idx},'productId',this.value)">${productOptionsHtml(it.productId)}</select>
+            <input type="number" placeholder="Qty" value="${it.qty}" onchange="updatePurchaseReturnItem(${idx},'qty',this.value)">
+            <input type="number" placeholder="Price" value="${it.price||''}" onchange="updatePurchaseReturnItem(${idx},'price',this.value)">
+            <button class="rm" onclick="removePurchaseReturnItemRow(${idx})">✕</button>
+          </div>`).join('')}
+        <button class="add-item-btn" onclick="addPurchaseReturnItemRow()">+ Item add karein</button>
+        <div class="invoice-total"><span class="lbl">Return Total</span><span class="val" style="color:var(--expense)">Rs ${fmt(purchaseReturnItems.reduce((s,it)=>s+it.qty*it.price,0))}</span></div>
+        <p style="font-size:11px;color:var(--ink-dim);margin:0 0 10px;">Stock kam hoga aur supplier ko dena isi amount se kam ho jayega.</p>
+        <div class="actions">
+          <button class="btn btn-gold" style="background:var(--expense)" onclick="submitPurchaseReturn()">Return Save karein</button>
+          <button class="btn btn-ghost" onclick="toggleForm('purchaseReturn')">Cancel</button>
+        </div>
       </div>
-    </div>
-    ${purchases().length ? purchases().slice().reverse().map(purchaseRow).join('') : `<div class="empty"><span class="big">Koi purchase nahi</span>Upar se pehli invoice banayein</div>`}
-    ${purchaseReturns().length ? `<div class="section-title">Purchase Returns</div>` + purchaseReturns().slice().reverse().map(r=>returnRow('supplier', r)).join('') : ''}
-    `;
+      `;
+    } else {
+      body = `
+      <div class="page-header-row">
+        <h2>Purchases</h2>
+        <div class="page-header-actions">
+          <button class="ph-btn" onclick="toggleForm('purchaseReturn')">${ICONS.undo} Returns</button>
+          <button class="ph-btn primary" onclick="purchaseView='new'; render();">${ICONS.plus} New Purchase</button>
+        </div>
+      </div>
+      ${draftBannerHtml('purchase')}
+      <div class="list-toolbar">
+        <input type="text" placeholder="Search invoice, supplier" value="${escapeHtml(listSearchQuery.purchase)}" onchange="listSearchQuery.purchase=this.value; render();">
+      </div>
+      ${(()=>{
+        const list = purchases().slice().reverse();
+        const q = listSearchQuery.purchase.trim().toLowerCase();
+        const filtered = q ? list.filter(p=>{
+          const sup = purchaseSupplierDisplay(p).toLowerCase();
+          return ('pur-'+p.payload.invoiceNo).includes(q) || sup.includes(q);
+        }) : list;
+        if(!filtered.length) return `<div class="empty"><span class="big">Koi purchase nahi</span>"+ New Purchase" se pehli invoice banayein</div>`;
+        const rows = filtered.map((p,idx)=>{
+          const sup = purchaseSupplierDisplay(p);
+          const isOpen = openPurchaseDetailId===p.id;
+          const detailRow = isOpen ? `<tr class="detail-subrow"><td colspan="7">
+            ${p.payload.items.map(it=>`<div style="display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0;"><span>${escapeHtml(it.name)} × ${it.qty}</span><span>Rs ${fmt(it.qty*it.price)}</span></div>`).join('')}
+          </td></tr>` : '';
+          return `
+          <tr>
+            <td>${idx+1}</td>
+            <td><span class="dt-invoice-link" onclick="openPrintPicker('purchase','${p.id}')">PUR-${p.payload.invoiceNo||'—'}</span></td>
+            <td><div class="dt-customer"><span class="dt-avatar">${initials(sup)}</span>${escapeHtml(sup)}</div></td>
+            <td>${p.payload.date}</td>
+            <td>${p.payload.items.length}</td>
+            <td>Rs ${fmt(p.payload.total)}</td>
+            <td>
+              <div class="dt-actions">
+                <button class="dt-icon-btn" onclick="openPurchaseDetailId = openPurchaseDetailId==='${p.id}'?null:'${p.id}'; render()" title="View">${ICONS.eye}</button>
+                <button class="dt-icon-btn" onclick="openPrintPicker('purchase','${p.id}')" title="Print">${ICONS.printer}</button>
+                ${isAdmin() ? `<button class="dt-icon-btn" onclick="editPurchase('${p.id}')" title="Edit">${ICONS.edit}</button>` : ''}
+                ${isAdmin() ? `<button class="dt-icon-btn" onclick="deleteRecord('${p.id}')" title="Delete">${ICONS.trash}</button>` : ''}
+              </div>
+              ${statusBadge(p.payload.paid, p.payload.total)}
+            </td>
+          </tr>${detailRow}`;
+        }).join('');
+        return `<div class="data-table-wrap"><table class="data-table"><thead><tr><th>S.L</th><th>Invoice</th><th>Supplier</th><th>Date</th><th>Items</th><th>Total</th><th>Status/Action</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+      })()}
+      ${purchaseReturns().length ? `<div class="section-title">Purchase Returns</div>` + purchaseReturns().slice().reverse().map(r=>returnRow('supplier', r)).join('') : ''}
+      `;
+    }
   } else if(activeTab==='parties'){
     body = `
     <div class="section-title">Customers <span class="count">${customers().length}</span></div>
